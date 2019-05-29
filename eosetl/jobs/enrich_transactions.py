@@ -21,8 +21,8 @@
 # SOFTWARE.
 
 from eosetl.enumeration.chain import Chain
-from eosetl.mappers.transaction_mapper import BtcTransactionMapper
-from eosetl.service.btc_service import BtcService
+from eosetl.mappers.transaction_mapper import EosTransactionMapper
+from eosetl.service.btc_service import EosService
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.utils import dynamic_batch_iterator
@@ -39,13 +39,13 @@ class EnrichTransactionsJob(BaseJob):
             item_exporter,
             chain=Chain.BITCOIN):
         self.transactions_iterable = transactions_iterable
-        self.btc_service = BtcService(eos_rpc, chain)
+        self.btc_service = EosService(eos_rpc, chain)
 
         self.batch_size = batch_size
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers, exponential_backoff=False)
         self.item_exporter = item_exporter
 
-        self.transaction_mapper = BtcTransactionMapper()
+        self.transaction_mapper = EosTransactionMapper()
 
     def _start(self):
         self.item_exporter.open()

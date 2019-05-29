@@ -57,11 +57,11 @@ class CompositeItemExporter:
     def export_item(self, item):
         item_type = item.get('type')
         if item_type is None:
-            raise ValueError('"type" key is not found in item {}'.format(repr(item)))
+            raise ValueError(f'"type" key is not found in item {repr(item)}')
 
         exporter = self.exporter_mapping.get(item_type)
         if exporter is None:
-            raise ValueError('Exporter for item type {} not found'.format(item_type))
+            raise ValueError(f'Exporter for item type "{item_type}" not found')
         exporter.export_item(item)
 
         counter = self.counter_mapping.get(item_type)

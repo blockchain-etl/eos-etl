@@ -56,7 +56,7 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'trx.transaction.max_cpu_usage_ms',
     'trx.transaction.delay_sec',
     'trx.transaction.transaction_extensions',
-    'trx.transaction.actions',
+    # 'trx.transaction.actions',
 ]
 
 ACTION_FIELDS_TO_EXPORT = [

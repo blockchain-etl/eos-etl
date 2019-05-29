@@ -29,7 +29,7 @@ import json
 
 # http://chainquery.com/bitcoin-api/getblock
 # http://chainquery.com/bitcoin-api/getrawtransaction
-class BtcTransactionMapper(object):
+class EosTransactionMapper(object):
 
     def __init__(self):
         self.transaction_input_mapper = BtcTransactionInputMapper()
@@ -65,8 +65,20 @@ class BtcTransactionMapper(object):
             # remember to update
             # blocks_and_transactions_item_exporter.py as well
 
-            for index in range(len(transaction["trx"]["transaction"]["actions"])):
-                transaction["trx"]["transaction"]["actions"][index]["type"] = "action"
+            # for index in range(len(transaction["trx"]["transaction"]["actions"])):
+            #     transaction["trx"]["transaction"]["actions"][index]["type"] = "action"
+
+            if isinstance(transaction["trx"], str):
+                # this is deferred transaction, it does not include any transaction data.
+                # Example: {
+                #   "status": "executed",
+                #   "cpu_usage_us": 934,
+                #   "net_usage_words": 0,
+                #   "trx": "c962ca108b24828aca08abb4a62a1ce9392c565c6bc81aaada7ceb2cbdfafd8b"
+                # }
+                # todo: decide - what should we do about it?..
+                # for now it's just ignored
+                return
 
             return {
                 'type': 'transaction',
@@ -89,7 +101,8 @@ class BtcTransactionMapper(object):
                 'trx.transaction.actions': transaction["trx"]["transaction"]["actions"],
             }
         except Exception as e:
-            print("Skipping block \nid: %s\ntransaction: %s\nbecause: %s" % (block['id'] if block else "", json.dumps(transaction), e))
+            block_id = block['id'] if block else ""
+            print(f"Skipping transaction:\n{json.dumps(transaction)}\nfrom block id: {block_id}\nbecause: {e}")
             return None
 
     def dict_to_transaction(self, dict):

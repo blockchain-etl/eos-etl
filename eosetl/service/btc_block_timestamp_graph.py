@@ -21,14 +21,14 @@
 # SOFTWARE.
 
 
-from eosetl.service.btc_service import BtcService
+from eosetl.service.btc_service import EosService
 from blockchainetl.service.graph_operations import Point
 import json
 import dateutil.parser
 
 class BlockTimestampGraph(object):
     def __init__(self, eos_rpc):
-        self._btc_service = BtcService(eos_rpc)
+        self._btc_service = EosService(eos_rpc)
 
     def get_first_point(self):
         block = self._btc_service.get_genesis_block()

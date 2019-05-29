@@ -28,7 +28,7 @@ import time
 from eosetl.enumeration.chain import Chain
 from eosetl.jobs.enrich_transactions import EnrichTransactionsJob
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
-from eosetl.service.btc_service import BtcService
+from eosetl.service.btc_service import EosService
 from blockchainetl.file_utils import smart_open
 from blockchainetl.jobs.exporters.console_item_exporter import ConsoleItemExporter
 from blockchainetl.jobs.exporters.in_memory_item_exporter import InMemoryItemExporter
@@ -72,7 +72,7 @@ def stream(
         init_last_synced_block_file((start_block or 0) - 1, last_synced_block_file)
 
     last_synced_block = read_last_synced_block(last_synced_block_file)
-    btc_service = BtcService(eos_rpc, chain)
+    btc_service = EosService(eos_rpc, chain)
 
     item_exporter.open()
 

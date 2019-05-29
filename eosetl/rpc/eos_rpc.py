@@ -42,7 +42,8 @@ class EosRpc:
         raw_response = requests.post(
             url=self.provider_uri + endpoint,
             data=json.dumps(data),
-            headers=self.headers
+            headers=self.headers,
+            timeout=360
         )
 
         if (raw_response.status_code != 200):

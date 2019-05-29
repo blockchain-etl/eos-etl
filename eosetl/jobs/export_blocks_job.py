@@ -19,11 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-
-from eosetl.mappers.block_mapper import BtcBlockMapper
-from eosetl.mappers.transaction_mapper import BtcTransactionMapper
-from eosetl.service.btc_service import BtcService
+from eosetl.mappers.action_mapper import EosActionMapper
+from eosetl.mappers.block_mapper import EosBlockMapper
+from eosetl.mappers.transaction_mapper import EosTransactionMapper
+from eosetl.service.btc_service import EosService
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.utils import validate_range
@@ -54,9 +53,10 @@ class ExportBlocksJob(BaseJob):
         if not self.export_blocks and not self.export_transactions:
             raise ValueError('At least one of export_blocks or export_transactions must be True')
 
-        self.btc_service = BtcService(eos_rpc, chain)
-        self.block_mapper = BtcBlockMapper()
-        self.transaction_mapper = BtcTransactionMapper()
+        self.eos_service = EosService(eos_rpc, chain)
+        self.block_mapper = EosBlockMapper()
+        self.transaction_mapper = EosTransactionMapper()
+        self.action_mapper = EosActionMapper()
 
     def _start(self):
         self.item_exporter.open()
@@ -69,21 +69,36 @@ class ExportBlocksJob(BaseJob):
         )
 
     def _export_batch(self, block_number_batch):
-        blocks = self.btc_service.get_blocks(block_number_batch, self.export_transactions)
+        blocks = self.eos_service.get_blocks(block_number_batch, self.export_transactions)
         for block in blocks:
             self._export_block(block)
+            self._export_txs(block)
 
     def _export_block(self, block):
-        if self.export_blocks:
-            self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
-        if self.export_transactions:
-            for tx in block["transactions"]:
-                tx_dict = self.transaction_mapper.transaction_to_dict(tx, block)
-                if tx_dict: # skip in None returned
-                    self.item_exporter.export_item(tx_dict)
-                    if tx_dict.get("trx.transaction.actions") is not None:
-                        for action in tx_dict[ "trx.transaction.actions"]:
-                            self.item_exporter.export_item(action)
+        if not self.export_blocks:
+            return
+
+        self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
+
+    def _export_txs(self, block):
+        if not self.export_transactions:
+            return
+
+        for tx in block["transactions"]:
+            self._export_tx(tx, block)
+
+    def _export_tx(self, tx, block):
+        tx_dict = self.transaction_mapper.transaction_to_dict(tx, block)
+        if not tx_dict: # skip in None returned
+            return
+
+        self.item_exporter.export_item(tx_dict)
+        if tx_dict.get("trx.transaction.actions") is None:
+            return
+
+        for action in tx_dict[ "trx.transaction.actions"]:
+            action_dict = self.action_mapper.action_to_dict(action, tx_dict['trx.hash'], block)
+            self.item_exporter.export_item(action_dict)
 
     def _end(self):
         self.batch_work_executor.shutdown()

@@ -25,18 +25,20 @@ from eosetl.domain.transaction_output import BtcTransactionOutput
 from eosetl.enumeration.chain import Chain
 from eosetl.json_rpc_requests import generate_get_block_hash_by_number_json_rpc, \
     generate_get_block_by_hash_json_rpc, generate_get_transaction_by_id_json_rpc
-from eosetl.mappers.block_mapper import BtcBlockMapper
-from eosetl.mappers.transaction_mapper import BtcTransactionMapper
+from eosetl.mappers.action_mapper import EosActionMapper
+from eosetl.mappers.block_mapper import EosBlockMapper
+from eosetl.mappers.transaction_mapper import EosTransactionMapper
 from eosetl.service.btc_script_service import script_hex_to_non_standard_address
 from eosetl.service.genesis_transactions import GENESIS_TRANSACTIONS
 from blockchainetl.utils import rpc_response_batch_to_results, dynamic_batch_iterator
 
 
-class BtcService(object):
+class EosService(object):
     def __init__(self, eos_rpc, chain=Chain.BITCOIN):
         self.eos_rpc = eos_rpc
-        self.block_mapper = BtcBlockMapper()
-        self.transaction_mapper = BtcTransactionMapper()
+        self.block_mapper = EosBlockMapper()
+        self.transaction_mapper = EosTransactionMapper()
+        self.action_mapper = EosActionMapper()
         self.chain = chain
 
     def get_block(self, block_number, with_transactions=False):

@@ -22,13 +22,13 @@
 
 
 from eosetl.domain.block import BtcBlock
-from eosetl.mappers.transaction_mapper import BtcTransactionMapper
+from eosetl.mappers.transaction_mapper import EosTransactionMapper
 
 
-class BtcBlockMapper(object):
+class EosBlockMapper(object):
     def __init__(self, transaction_mapper=None):
         if transaction_mapper is None:
-            self.transaction_mapper = BtcTransactionMapper()
+            self.transaction_mapper = EosTransactionMapper()
         else:
             self.transaction_mapper = transaction_mapper
 
