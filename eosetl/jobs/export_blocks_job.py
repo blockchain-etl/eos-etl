@@ -97,7 +97,7 @@ class ExportBlocksJob(BaseJob):
             return
 
         for action in tx_dict[ "trx.transaction.actions"]:
-            action_dict = self.action_mapper.action_to_dict(action, tx_dict['trx.hash'], block)
+            action_dict = self.action_mapper.action_to_dict(action, tx_dict, block)
             self.item_exporter.export_item(action_dict)
 
     def _end(self):

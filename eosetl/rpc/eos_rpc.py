@@ -43,7 +43,7 @@ class EosRpc:
             url=self.provider_uri + endpoint,
             data=json.dumps(data),
             headers=self.headers,
-            timeout=360
+            timeout=60
         )
 
         if (raw_response.status_code != 200):

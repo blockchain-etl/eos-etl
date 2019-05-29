@@ -51,34 +51,21 @@ class EosActionMapper(object):
     #
     #     return transaction
     #
-    def action_to_dict(self, action, transaction_id, block = None):
+    def action_to_dict(self, action, tx_dict, block=None):
         try:
             # remember to update
             # blocks_and_transactions_item_exporter.py as well
 
             result = {
                 'type': 'action',
-                'transaction_id': transaction_id,
+                'transaction_hash': tx_dict['trx.hash'],
+                'block_hash': tx_dict['block_hash'],
                 'account': action["account"],
                 'name': action["name"],
                 'authorization': action["authorization"],
                 'data': action["data"],
                 'hex_data': action["hex_data"] if "hex_data" in action else "NULL",
-                # 'trx.signatures': action["trx"]["signatures"],
-                # 'trx.compression': action["trx"]["compression"],
-                # 'trx.packed_context_free_data': action["trx"]["packed_context_free_data"],
-                # 'trx.context_free_data': action["trx"]["context_free_data"],
-                # 'trx.packed_trx': action["trx"]["packed_trx"],
-                # 'trx.transaction.expiration': action["trx"]["transaction"]["expiration"],
-                # 'trx.transaction.ref_block_num': action["trx"]["transaction"]["ref_block_num"],
-                # 'trx.transaction.ref_block_prefix': action["trx"]["transaction"]["ref_block_prefix"],
-                # 'trx.transaction.max_net_usage_words': action["trx"]["transaction"]["max_net_usage_words"],
-                # 'trx.transaction.max_cpu_usage_ms': action["trx"]["transaction"]["max_cpu_usage_ms"],
-                # 'trx.transaction.delay_sec': action["trx"]["transaction"]["delay_sec"],
-                # 'trx.transaction.transaction_extensions': action["trx"]["transaction"]["transaction_extensions"],
-                # 'trx.transaction.actions': action["trx"]["transaction"]["actions"],
             }
-
 
             action.pop('account', None)
             action.pop('name', None)

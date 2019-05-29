@@ -80,8 +80,11 @@ class EosTransactionMapper(object):
                 # for now it's just ignored
                 return
 
+            block_hash = block['id'] if block else ""
+
             return {
                 'type': 'transaction',
+                'block_hash': block_hash,
                 'status': transaction["status"],
                 'cpu_usage_us': transaction["cpu_usage_us"],
                 'net_usage_words': transaction["net_usage_words"],
@@ -101,8 +104,7 @@ class EosTransactionMapper(object):
                 'trx.transaction.actions': transaction["trx"]["transaction"]["actions"],
             }
         except Exception as e:
-            block_id = block['id'] if block else ""
-            print(f"Skipping transaction:\n{json.dumps(transaction)}\nfrom block id: {block_id}\nbecause: {e}")
+            print(f"Skipping transaction:\n{json.dumps(transaction)}\nfrom block id: {block_hash}\nbecause: {e}")
             return None
 
     def dict_to_transaction(self, dict):

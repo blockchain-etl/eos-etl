@@ -39,7 +39,7 @@ BLOCK_FIELDS_TO_EXPORT = [
 ]
 
 TRANSACTION_FIELDS_TO_EXPORT = [
-    'type',
+    'block_hash',
     'status',
     'cpu_usage_us',
     'net_usage_words',
@@ -60,6 +60,8 @@ TRANSACTION_FIELDS_TO_EXPORT = [
 ]
 
 ACTION_FIELDS_TO_EXPORT = [
+    'transaction_hash',
+    'block_hash',
     "account",
     "name",
     "authorization",

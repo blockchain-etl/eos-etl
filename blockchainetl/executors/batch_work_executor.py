@@ -19,15 +19,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+from http.client import RemoteDisconnected
 from json import JSONDecodeError
 
-from requests.exceptions import Timeout as RequestsTimeout, HTTPError, TooManyRedirects
+from requests.exceptions import Timeout as RequestsTimeout, HTTPError, TooManyRedirects, ConnectionError as RequestsConnectionError
+
 from blockchainetl.executors.bounded_executor import BoundedExecutor
 from blockchainetl.executors.fail_safe_executor import FailSafeExecutor
 from blockchainetl.progress_logger import ProgressLogger
 from blockchainetl.utils import dynamic_batch_iterator
 
-RETRY_EXCEPTIONS = (ConnectionError, HTTPError, RequestsTimeout, TooManyRedirects, OSError, JSONDecodeError)
+RETRY_EXCEPTIONS = (RemoteDisconnected, ConnectionResetError, RequestsConnectionError, ConnectionError, HTTPError, RequestsTimeout, TooManyRedirects, OSError, JSONDecodeError)
 
 
 # Executes the given work in batches, reducing the batch size exponentially in case of errors.
@@ -41,17 +43,24 @@ class BatchWorkExecutor:
         self.retry_exceptions = retry_exceptions
         self.exponential_backoff = exponential_backoff
         self.progress_logger = ProgressLogger()
+        self.counter = 0
 
     def execute(self, work_iterable, work_handler, total_items=None):
         self.progress_logger.start(total_items=total_items)
         for batch in dynamic_batch_iterator(work_iterable, lambda: self.batch_size):
             self.executor.submit(self._fail_safe_execute, work_handler, batch)
-
     # Check race conditions
     def _fail_safe_execute(self, work_handler, batch):
         try:
+            self.counter+=1
+            # print(f"Trying batch {batch}, workers: {self.counter}")
+            print(".", end="", flush=True)
             work_handler(batch)
-        except self.retry_exceptions:
+            self.counter-=1
+        except self.retry_exceptions as e:
+            self.counter-=1
+            print(f"\nGot Exception: {e}")
+
             batch_size = self.batch_size
             # Reduce the batch size. Subsequent batches will be 2 times smaller
             if batch_size == len(batch) and batch_size > 1:
