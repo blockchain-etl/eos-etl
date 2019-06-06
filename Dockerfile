@@ -1,6 +1,6 @@
 FROM python:3.6-alpine
 MAINTAINER Omidiora Samuel <samparsky@gmail.com>
-ENV PROJECT_DIR=bitcoin-etl
+ENV PROJECT_DIR=eos-etl
 
 RUN mkdir /$PROJECT_DIR
 WORKDIR /$PROJECT_DIR

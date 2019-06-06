@@ -36,7 +36,7 @@ logging_basic_config()
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-s', '--start-block', default=0, type=int, help='Start block')
 @click.option('-e', '--end-block', required=True, type=int, help='End block')
-@click.option('-b', '--batch-size', default=1, type=int, help='The number of blocks to export at a time.')
+# @click.option('-b', '--batch-size', default=1, type=int, help='The number of blocks to export at a time.')
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
               help='The URI of the remote Bitcoin node')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')

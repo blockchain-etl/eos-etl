@@ -1,13 +1,13 @@
 # Bitcoin ETL
 
 [![Join the chat at https://gitter.im/ethereum-eth](https://badges.gitter.im/ethereum-etl.svg)](https://gitter.im/ethereum-etl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/blockchain-etl/bitcoin-etl.png)](https://travis-ci.org/blockchain-etl/bitcoin-etl)
+[![Build Status](https://travis-ci.org/blockchain-etl/eos-etl.png)](https://travis-ci.org/blockchain-etl/eos-etl)
 [Join Telegram Group](https://t.me/joinchat/GsMpbA3mv1OJ6YMp3T5ORQ)
 
 Install Bitcoin ETL:
 
 ```bash
-pip install bitcoin-etl
+pip install eos-etl
 ```
 
 Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_blocks_and_transactions)):
@@ -29,7 +29,7 @@ Supported chains:
 Stream blockchain data continually to console:
 
 ```bash
-> pip install bitcoin-etl[streaming]
+> pip install eos-etl[streaming]
 > eosetl stream -p http://user:pass@localhost:8332 --start-block 500000
 ```
 
@@ -126,7 +126,7 @@ addresses               | []string              |
 value                   | bigint                | 
 
 
-You can find column descriptions in [schemas](https://github.com/blockchain-etl/bitcoin-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
+You can find column descriptions in [schemas](https://github.com/blockchain-etl/eos-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
 
 **Notes**:
 
@@ -151,7 +151,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 1. Install Bitcoin ETL:
 
     ```bash
-    > pip install bitcoin-etl
+    > pip install eos-etl
     ```
 
 1. Export blocks & transactions:
@@ -180,26 +180,29 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 
 1. Build a docker image
     ```bash
-    > docker build -t bitcoin-etl:latest .
+    > docker build -t eos-etl:latest .
     > docker image ls
     ```
 
 1. Run a container out of the image
     ```bash
-    > docker run -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_blocks_and_transactions --start-block 0 --end-block 500000 \
-        --rpc-pass '' --rpc-host 'localhost' --rpc-user '' --blocks-output blocks.json --transactions-output transactions.json
+    > MSYS_NO_PATHCONV=1 docker run -v $HOME/output:/eos-etl/output eos-etl:latest \
+        export_blocks_and_transactions --max-workers 50 --start-block 30000000 \
+        --end-block 30000100 --provider-uri http://your_eos_node:node_port \
+        --blocks-output ./output/blocks.csv --transactions-output ./output/transactions.csv \
+        --actions-output ./output/actions.csv
     ```
     
 1. Run streaming to console or Pub/Sub
     ```bash
-    > docker build -t bitcoin-etl:latest-streaming -f Dockerfile_with_streaming .
+    > MSYS_NO_PATHCONV=1 docker build -t eos-etl:latest-streaming -f Dockerfile_with_streaming .
     > echo "Stream to console"
-    > docker run bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000
+    > MSYS_NO_PATHCONV=1 docker run eos-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000
     > echo "Stream to Pub/Sub"
-    > docker run -v /path_to_credentials_file/:/bitcoin-etl/ --env GOOGLE_APPLICATION_CREDENTIALS=/bitcoin-etl/credentials_file.json bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/crypto_bitcoin
+    > MSYS_NO_PATHCONV=1 docker run -v /path_to_credentials_file/:/eos-etl/ --env GOOGLE_APPLICATION_CREDENTIALS=/eos-etl/credentials_file.json eos-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/crypto_eos
     ```
 
-1. Refer to https://github.com/blockchain-etl/bitcoin-etl-streaming for deploying the streaming app to 
+1. Refer to https://github.com/blockchain-etl/blockchain-etl-streaming for deploying the streaming app to 
 Google Kubernetes Engine.
 
 ### Command Reference
@@ -213,7 +216,7 @@ Google Kubernetes Engine.
 All the commands accept `-h` parameter for help, e.g.:
 
 ```bash
-> eosetl export_blocks_and_transactions --help
+> python eosetl.py export_blocks_and_transactions --help
 Usage: eosetl.py export_blocks_and_transactions [OPTIONS]
 
   Export blocks and transactions.
@@ -221,7 +224,6 @@ Usage: eosetl.py export_blocks_and_transactions [OPTIONS]
 Options:
   -s, --start-block INTEGER   Start block
   -e, --end-block INTEGER     End block  [required]
-  -b, --batch-size INTEGER    The number of blocks to export at a time.
   -p, --provider-uri TEXT     The URI of the remote Bitcoin node
   -w, --max-workers INTEGER   The maximum number of workers.
   --blocks-output TEXT        The output file for blocks. If not provided
@@ -229,6 +231,9 @@ Options:
   --transactions-output TEXT  The output file for transactions. If not
                               provided transactions will not be exported. Use
                               "-" for stdout
+  --actions-output TEXT       The output file for actions. If not provided
+                              transactions will not be exported. Use "-"
+                              for stdout
   --help                      Show this message and exit.
 ```
 
@@ -237,14 +242,14 @@ For the `--output` parameters the supported type is json. The format type is inf
 #### export_blocks_and_transactions
 
 ```bash
-> eosetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
+> python eosetl.py export_blocks_and_transactions --start-block 0 --end-block 500000 \
   --provider-uri http://user:pass@localhost:8332 \
   --blocks-output blocks.json --transactions-output transactions.json
 ```
 
-Omit `--blocks-output` or `--transactions-output` options if you want to export only transactions/blocks.
+Omit `--blocks-output` or `--transactions-output` or `--actions-output` options if you want to export only transactions/blocks/actions.
 
-You can tune `--batch-size`, `--max-workers` for performance.
+You can tune `--max-workers` for performance.
 
 Note that `required_signatures`, `type`, `addresses`, and `value` fields will be empty in transactions inputs. 
 Use [enrich_transactions](#enrich_transactions) to populate those fields.
@@ -252,7 +257,7 @@ Use [enrich_transactions](#enrich_transactions) to populate those fields.
 #### enrich_transactions
 
 ```bash
-> eosetl enrich_transactions  \
+> python eosetl.py enrich_transactions  \
   --provider-uri http://user:pass@localhost:8332 \
   --transactions-input transactions.json --transactions-output enriched_transactions.json
 ```
@@ -262,23 +267,13 @@ You can tune `--batch-size`, `--max-workers` for performance.
 #### get_block_range_for_date
 
 ```bash
-> eosetl get_block_range_for_date --provider-uri http://user:pass@localhost:8332 --date=2017-03-01
-```
-
-This command is guaranteed to return the block range that covers all blocks with `block.time` on the specified
-date. However the returned block range may also contain blocks outside the specified date, because block times are not 
-monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can filter 
-`blocks.json`/`transactions.json` with the below command:
-
-```bash
-> eosetl filter_items -i blocks.json -o blocks_filtered.json \
--p "datetime.datetime.fromtimestamp(item['timestamp']).astimezone(datetime.timezone.utc).strftime('%Y-%m-%d') == '2017-03-01'"
+> python eosetl.py get_block_range_for_date --provider-uri http://user:pass@localhost:8332 --date=2017-03-01
 ```
 
 #### export_all
 
 ```bash
-> eosetl export_all --provider-uri http://user:pass@localhost:8332 --start 2018-01-01 --end 2018-01-02
+> python eosetl.py export_all --provider-uri http://user:pass@localhost:8332 --start 2018-01-01 --end 2018-01-02
 ```
 
 You can tune `--export-batch-size`, `--max-workers` for performance.
@@ -286,7 +281,7 @@ You can tune `--export-batch-size`, `--max-workers` for performance.
 #### stream
 
 ```bash
-> eosetl stream --provider-uri http://user:pass@localhost:8332 --start-block 500000
+> python eosetl.py stream --provider-uri http://user:pass@localhost:8332 --start-block 500000
 ```
 
 - This command outputs blocks and transactions to the console by default.
