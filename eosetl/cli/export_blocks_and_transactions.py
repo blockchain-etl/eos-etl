@@ -51,9 +51,11 @@ logging_basic_config()
                    'If not provided transactions will not be exported. Use "-" for stdout')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
               help='The type of chain')
-def export_blocks_and_transactions(start_block, end_block, batch_size, provider_uri,
+def export_blocks_and_transactions(start_block, end_block, provider_uri,
                                    max_workers, blocks_output, transactions_output, actions_output, chain):
     """Export blocks and transactions."""
+    batch_size = 1
+
     if blocks_output is None and transactions_output is None:
         raise ValueError('Either --blocks-output or --transactions-output options must be provided')
 

@@ -47,8 +47,8 @@ class MockEosRpc:
             rpc_response.append(json_loads(file_content))
         return rpc_response
 
-    def getblock(self, blockhash, verbosity):
-        file_name = 'rpc_response_{}_{}_{}.json'.format("geblock", blockhash, verbosity)
+    def getblock(self, blockhash):
+        file_name = 'rpc_response_{}_{}.json'.format("geblock", blockhash)
         file_content = self.read_resource(file_name)
         return json_loads(file_content)
 

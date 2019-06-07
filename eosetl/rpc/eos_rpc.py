@@ -46,6 +46,8 @@ class EosRpc:
             timeout=60
         )
 
+        # raise Exception(raw_response.content)
+
         if (raw_response.status_code != 200):
             raise Exception("Failed calling API. Error: " + raw_response.text)
 
