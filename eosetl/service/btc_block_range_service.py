@@ -38,8 +38,8 @@ class BtcBlockRangeService(object):
         return self.get_block_range_for_timestamps(start_datetime.timestamp(), end_datetime.timestamp())
 
     def get_block_range_for_timestamps(self, start_timestamp, end_timestamp):
-        start_timestamp = int(start_timestamp)
-        end_timestamp = int(end_timestamp)
+        start_timestamp = start_timestamp
+        end_timestamp = end_timestamp
         if start_timestamp > end_timestamp:
             raise ValueError('start_timestamp must be greater or equal to end_timestamp')
 
