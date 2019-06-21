@@ -29,7 +29,7 @@ from blockchainetl_common.jobs.base_job import BaseJob
 from blockchainetl_common.utils import validate_range
 
 
-# Exports blocks and transactions
+# Exports blocks, transactions and actions
 class ExportBlocksJob(BaseJob):
     def __init__(
             self,
@@ -69,7 +69,7 @@ class ExportBlocksJob(BaseJob):
         )
 
     def _export_batch(self, block_number_batch):
-        blocks = self.eos_service.get_blocks(block_number_batch, self.export_transactions)
+        blocks = self.eos_service.get_blocks(block_number_batch)
         for block in blocks:
             self._export_block(block)
             self._export_transactions(block)
@@ -89,7 +89,7 @@ class ExportBlocksJob(BaseJob):
 
     def _export_transaction(self, transaction, block):
         transaction_dict = self.transaction_mapper.transaction_to_dict(transaction, block)
-        if not transaction_dict: # skip in None returned
+        if not transaction_dict: # skip if None returned
             return
 
         self.item_exporter.export_item(transaction_dict)

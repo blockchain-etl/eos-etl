@@ -32,23 +32,18 @@ class EosService(object):
         self.transaction_mapper = EosTransactionMapper()
         self.action_mapper = EosActionMapper()
 
-    def get_block(self, block_number, with_transactions=False):
+    def get_block(self, block_number):
         return self.eos_rpc.getblock(block_number)
 
-    def get_genesis_block(self, with_transactions=False):
-        return self.get_block(1, with_transactions)
+    def get_genesis_block(self):
+        return self.get_block(1)
 
-    def get_latest_block(self, with_transactions=False):
+    def get_latest_block(self):
         last_irreversible_block_id = self.eos_rpc.get_info()["last_irreversible_block_id"]
-        return self.get_block(last_irreversible_block_id, with_transactions)
+        return self.get_block(last_irreversible_block_id)
 
-    def get_blocks(self, block_number_batch, with_transactions=False):
+    def get_blocks(self, block_number_batch):
         if not block_number_batch:
             return []
 
         return [self.get_block(x) for x in block_number_batch]
-
-        # block_hashes = self.get_block_hashes(block_number_batch)
-        # return self.get_blocks_by_hashes(block_hashes, with_transactions)
-
-ADDRESS_TYPE_SHIELDED = 'shielded'
