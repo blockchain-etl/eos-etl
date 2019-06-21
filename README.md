@@ -14,15 +14,15 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
 
 ```bash
 > eosetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
---provider-uri http://user:pass@localhost:8332 \
---blocks-output blocks.json --transactions-output transactions.json
+--provider-uri http://api.main.alohaeos.com \
+--blocks-output blocks.json --transactions-output transactions.json --actions-output actions.json
 ```
 
 Stream blockchain data continually to console:
 
 ```bash
 > pip install eos-etl[streaming]
-> eosetl stream -p http://user:pass@localhost:8332 --start-block 500000
+> eosetl stream -p http://api.main.alohaeos.com --start-block 500000
 ```
 
 For the latest version, check out the repo and call 
@@ -73,7 +73,7 @@ You can export blocks below `last_irreversible_block_num`, there is no need to w
 
     ```bash
     > eosetl export_all --start 0 --end 499999  \
-    --provider-uri http://user:pass@localhost:8332
+    --provider-uri http://api.main.alohaeos.com
     ```
     
     In case `eosetl` command is not available in PATH, use `python -m eosetl` instead.
@@ -113,9 +113,9 @@ You can export blocks below `last_irreversible_block_num`, there is no need to w
     ```bash
     > MSYS_NO_PATHCONV=1 docker build -t eos-etl:latest-streaming -f Dockerfile_with_streaming .
     > echo "Stream to console"
-    > MSYS_NO_PATHCONV=1 docker run eos-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000
+    > MSYS_NO_PATHCONV=1 docker run eos-etl:latest-streaming stream -p http://api.main.alohaeos.com --start-block 500000
     > echo "Stream to Pub/Sub"
-    > MSYS_NO_PATHCONV=1 docker run -v /path_to_credentials_file/:/eos-etl/ --env GOOGLE_APPLICATION_CREDENTIALS=/eos-etl/credentials_file.json eos-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/crypto_eos
+    > MSYS_NO_PATHCONV=1 docker run -v /path_to_credentials_file/:/eos-etl/ --env GOOGLE_APPLICATION_CREDENTIALS=/eos-etl/credentials_file.json eos-etl:latest-streaming stream -p http://api.main.alohaeos.com --start-block 500000 --output projects/your-project/topics/crypto_eos
     ```
 
 1. Refer to https://github.com/blockchain-etl/blockchain-etl-streaming for deploying the streaming app to 
@@ -158,8 +158,8 @@ For the `--output` parameters the supported type is json. The format type is inf
 
 ```bash
 > python eosetl.py export_blocks_and_transactions --start-block 0 --end-block 500000 \
-  --provider-uri http://user:pass@localhost:8332 \
-  --blocks-output blocks.json --transactions-output transactions.json
+  --provider-uri http://api.main.alohaeos.com \
+  --blocks-output blocks.json --transactions-output transactions.json --actions-output actions.json
 ```
 
 Omit `--blocks-output` or `--transactions-output` or `--actions-output` options if you want to export only transactions/blocks/actions.
@@ -169,13 +169,13 @@ You can tune `--max-workers` for performance.
 #### get_block_range_for_date
 
 ```bash
-> python eosetl.py get_block_range_for_date --provider-uri http://user:pass@localhost:8332 --date=2017-03-01
+> python eosetl.py get_block_range_for_date --provider-uri http://api.main.alohaeos.com --date=2018-06-09
 ```
 
 #### export_all
 
 ```bash
-> python eosetl.py export_all --provider-uri http://user:pass@localhost:8332 --start 2018-01-01 --end 2018-01-02
+> python eosetl.py export_all --provider-uri http://api.main.alohaeos.com --start 2018-06-08 --end 2018-06-09
 ```
 
 You can tune `--export-batch-size`, `--max-workers` for performance.
@@ -183,7 +183,7 @@ You can tune `--export-batch-size`, `--max-workers` for performance.
 #### stream
 
 ```bash
-> python eosetl.py stream --provider-uri http://user:pass@localhost:8332 --start-block 500000
+> python eosetl.py stream --provider-uri http://api.main.alohaeos.com --start-block 500000
 ```
 
 - This command outputs blocks and transactions to the console by default.
@@ -202,7 +202,7 @@ handle chain reorganizations - they are less likely the further a block from the
 ```bash
 > pip install -e .[dev]
 > echo "The below variables are optional"
-> export EOSETL_PROVIDER_URI=http://api.main.alohaeos.com:80
+> export EOSETL_PROVIDER_URI=http://api.main.alohaeos.com
 > pytest -vv
 ```
 

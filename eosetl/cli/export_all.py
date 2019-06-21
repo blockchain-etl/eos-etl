@@ -87,7 +87,7 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 @click.option('-e', '--end', required=True, type=str, help='End block/ISO date')
 @click.option('-b', '--partition-batch-size', default=100, type=int,
               help='The number of blocks to export in partition.')
-@click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
+@click.option('-p', '--provider-uri', default='http://api.main.alohaeos.com', type=str,
               help='The URI of the remote EOS node')
 @click.option('-o', '--output-dir', default='output', type=str, help='Output directory, partitioned in Hive style.')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
