@@ -24,15 +24,15 @@ import json
 
 class EosActionMapper(object):
 
-    def action_to_dict(self, action, tx_dict, block=None):
+    def action_to_dict(self, action, transaction_dict, block=None):
         try:
             # remember to update
             # blocks_and_transactions_item_exporter.py as well
 
             result = {
                 'type': 'action',
-                'transaction_hash': tx_dict['trx.hash'],
-                'block_hash': tx_dict['block_hash'],
+                'transaction_hash': transaction_dict['trx.hash'],
+                'block_hash': transaction_dict['block_hash'],
                 'account': action["account"],
                 'name': action["name"],
                 'authorization': action["authorization"],

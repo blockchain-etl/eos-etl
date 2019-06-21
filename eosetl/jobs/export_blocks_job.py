@@ -72,7 +72,7 @@ class ExportBlocksJob(BaseJob):
         blocks = self.eos_service.get_blocks(block_number_batch, self.export_transactions)
         for block in blocks:
             self._export_block(block)
-            self._export_txs(block)
+            self._export_transactions(block)
 
     def _export_block(self, block):
         if not self.export_blocks:
@@ -80,24 +80,24 @@ class ExportBlocksJob(BaseJob):
 
         self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
 
-    def _export_txs(self, block):
+    def _export_transactions(self, block):
         if not self.export_transactions:
             return
 
-        for tx in block["transactions"]:
-            self._export_tx(tx, block)
+        for transaction in block["transactions"]:
+            self._export_transaction(transaction, block)
 
-    def _export_tx(self, tx, block):
-        tx_dict = self.transaction_mapper.transaction_to_dict(tx, block)
-        if not tx_dict: # skip in None returned
+    def _export_transaction(self, transaction, block):
+        transaction_dict = self.transaction_mapper.transaction_to_dict(transaction, block)
+        if not transaction_dict: # skip in None returned
             return
 
-        self.item_exporter.export_item(tx_dict)
-        if tx_dict.get("trx.transaction.actions") is None:
+        self.item_exporter.export_item(transaction_dict)
+        if transaction_dict.get("trx.transaction.actions") is None:
             return
 
-        for action in tx_dict[ "trx.transaction.actions"]:
-            action_dict = self.action_mapper.action_to_dict(action, tx_dict, block)
+        for action in transaction_dict["trx.transaction.actions"]:
+            action_dict = self.action_mapper.action_to_dict(action, transaction_dict, block)
             self.item_exporter.export_item(action_dict)
 
     def _end(self):
