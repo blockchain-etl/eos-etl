@@ -24,7 +24,6 @@
 
 import click
 
-from eosetl.enumeration.chain import Chain
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
 from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from eosetl.rpc.eos_rpc import EosRpc

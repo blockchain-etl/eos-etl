@@ -25,7 +25,6 @@ import logging
 import os
 import time
 
-from eosetl.enumeration.chain import Chain
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
 from eosetl.service.eos_service import EosService
 from blockchainetl.file_utils import smart_open
@@ -62,7 +61,6 @@ def stream(
         item_exporter=ConsoleItemExporter(),
         start_block=None,
         end_block=None,
-        chain=Chain.EOS,
         period_seconds=10,
         batch_size=2,
         block_batch_size=10,
@@ -93,7 +91,7 @@ def stream(
                 continue
 
             # Export blocks and transactions
-            blocks_and_transactions_item_exporter = InMemoryItemExporter(item_types=['block', 'transaction'])
+            blocks_and_transactions_item_exporter = InMemoryItemExporter(item_types=['block', 'transaction', 'action'])
 
             blocks_and_transactions_job = ExportBlocksJob(
                 start_block=last_synced_block + 1,
@@ -102,7 +100,6 @@ def stream(
                 eos_rpc=eos_rpc,
                 max_workers=max_workers,
                 item_exporter=blocks_and_transactions_item_exporter,
-                chain=chain,
                 export_blocks=True,
                 export_transactions=True
             )

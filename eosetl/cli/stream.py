@@ -22,7 +22,6 @@
 
 
 import click
-from eosetl.enumeration.chain import Chain
 from eosetl.rpc.eos_rpc import EosRpc
 
 from blockchainetl.logging_utils import logging_basic_config
@@ -40,12 +39,11 @@ logging_basic_config()
               help='Google PubSub topic path e.g. projects/your-project/topics/eos_blockchain. '
                    'If not specified will print to console')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block')
-@click.option('-c', '--chain', default=Chain.EOS, type=click.Choice(Chain.ALL), help='The type of chain')
 @click.option('-s', '--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs')
 @click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request')
 @click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
-def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.EOS,
+def stream(last_synced_block_file, lag, provider_uri, output, start_block,
            period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5):
     """Streams all data types to console or Google Pub/Sub."""
     from eosetl.streaming.streaming_utils import get_item_exporter
@@ -57,7 +55,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         lag=lag,
         item_exporter=get_item_exporter(output),
         start_block=start_block,
-        chain=chain,
         period_seconds=period_seconds,
         batch_size=batch_size,
         block_batch_size=block_batch_size,

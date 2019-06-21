@@ -29,51 +29,27 @@ from tests.eosetl.job.helpers import get_eos_rpc
 from tests.helpers import skip_if_slow_tests_disabled
 
 
-@pytest.mark.parametrize("chain,date,expected_start_block,expected_end_block", [
-    skip_if_slow_tests_disabled(['bitcoin', '2009-01-03', 0, 0], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2009-01-09', 1, 14], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2009-03-01', 5924, 6028], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2009-05-06', 13448, 13582], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2009-05-07', 13583, 13704], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2009-05-08', 13705, 13811], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2009-06-05', 16534, 16563], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2013-10-09', 262452, 262645], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2014-04-18', 296393, 296552], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2014-04-19', 296553, 296711], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', '2017-01-02', 446189, 446347], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['dogecoin', '2014-01-20', 63869, 65347], chain='dogecoin'),
-    skip_if_slow_tests_disabled(['dogecoin', '2014-01-21', 65322, 66853], chain='dogecoin'),
-    skip_if_slow_tests_disabled(['litecoin', '2011-10-07', 0, 0], chain='litecoin'),
-    skip_if_slow_tests_disabled(['dash', '2014-01-19', 0, 4138], chain='dash'),
-    skip_if_slow_tests_disabled(['zcash', '2016-10-28', 0, 629], chain='zcash'),
+@pytest.mark.parametrize("date,expected_start_block,expected_end_block", [
+    skip_if_slow_tests_disabled(['2018-06-08', 0, 1]),
+    skip_if_slow_tests_disabled(['2018-06-09', 2, 13338]),
 ])
-def test_get_block_range_for_date(chain, date, expected_start_block, expected_end_block):
-    eos_block_range_service = get_new_eos_block_range_service(chain)
+def test_get_block_range_for_date(date, expected_start_block, expected_end_block):
+    eos_block_range_service = get_new_eos_block_range_service()
     parsed_date = parse(date)
     blocks = eos_block_range_service.get_block_range_for_date(parsed_date)
     assert blocks == (expected_start_block, expected_end_block)
 
 
-@pytest.mark.parametrize("chain,date", [
-    skip_if_slow_tests_disabled(['bitcoin','2030-01-01'], chain='bitcoin')
+@pytest.mark.parametrize("date", [
+    skip_if_slow_tests_disabled(['2030-01-01'])
 ])
-def test_get_block_range_for_date_fail(chain, date):
-    eos_service = get_new_eos_block_range_service(chain)
+def test_get_block_range_for_date_fail(date):
+    eos_service = get_new_eos_block_range_service()
     parsed_date = parse(date)
     with pytest.raises(OutOfBoundsError):
         eos_service.get_block_range_for_date(parsed_date)
 
 
-@pytest.mark.parametrize("chain,start_timestamp,end_timestamp,expected_start_block,expected_end_block", [
-    skip_if_slow_tests_disabled(['bitcoin', 1235952055, 1235995140, 6029, 6082], chain='bitcoin'),
-    skip_if_slow_tests_disabled(['bitcoin', 1328227200, 1328248800, 165081,165132], chain='bitcoin'),
-])
-def test_get_block_range_for_timestamps(chain, start_timestamp, end_timestamp, expected_start_block, expected_end_block):
-    eth_service = get_new_eos_block_range_service(chain)
-    blocks = eth_service.get_block_range_for_timestamps(start_timestamp, end_timestamp)
-    assert blocks == (expected_start_block, expected_end_block)
-
-
-def get_new_eos_block_range_service(chain):
-    rpc = get_eos_rpc("online", chain=chain)
+def get_new_eos_block_range_service():
+    rpc = get_eos_rpc("online")
     return EosBlockRangeService(rpc)

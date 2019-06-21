@@ -53,11 +53,11 @@ def read_file(path):
         return file.read()
 
 
-def run_slow_tests(chain):
-    provider_uri_variable = os.environ.get('eosetl_{}_PROVIDER_URI'.format(chain.upper()), '')
+def run_slow_tests():
+    provider_uri_variable = os.environ.get('EOSETL_PROVIDER_URI', '')
     return provider_uri_variable is not None and len(provider_uri_variable) > 0
 
 
-def skip_if_slow_tests_disabled(data, chain='eos'):
-    return pytest.param(*data, marks=pytest.mark.skipif(not run_slow_tests(chain),
+def skip_if_slow_tests_disabled(data):
+    return pytest.param(*data, marks=pytest.mark.skipif(not run_slow_tests(),
                                                         reason='Skipping slow running tests'))

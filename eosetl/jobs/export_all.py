@@ -38,7 +38,7 @@ logging_basic_config()
 logger = logging.getLogger('export_all')
 
 
-def export_all(chain, partitions, output_dir, provider_uri, max_workers, batch_size):
+def export_all(partitions, output_dir, provider_uri, max_workers, batch_size):
     for batch_start_block, batch_end_block, partition_dir, *args in partitions:
         # # # start # # #
 
@@ -97,7 +97,6 @@ def export_all(chain, partitions, output_dir, provider_uri, max_workers, batch_s
         ))
 
         job = ExportBlocksJob(
-            chain=chain,
             start_block=batch_start_block,
             end_block=batch_end_block,
             batch_size=batch_size,

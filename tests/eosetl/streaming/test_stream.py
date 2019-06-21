@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 import os
 
 import pytest
@@ -38,11 +39,11 @@ def read_resource(resource_group, file_name):
 
 
 @pytest.mark.timeout(10)
-@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type,chain", [
-    (5000001, 5000002, 1, 'eos/stream_50001_50002', 'mock', 'eos'),
-    skip_if_slow_tests_disabled([5000001, 5000002, 1, 'eos/stream_50001_50002', 'online', 'eos']),
+@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type", [
+    (5000001, 5000002, 1, 'eos/stream_50001_50002', 'mock'),
+    skip_if_slow_tests_disabled([5000001, 5000002, 1, 'eos/stream_50001_50002', 'online']),
 ])
-def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, provider_type, chain):
+def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, provider_type):
     try:
         os.remove('last_synced_block.txt')
     except OSError:
@@ -56,8 +57,7 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
         eos_rpc=ThreadLocalProxy(
             lambda: get_eos_rpc(
                 provider_type,
-                read_resource_lambda=lambda file: read_resource(resource_group, file),
-                chain=chain)),
+                read_resource_lambda=lambda file: read_resource(resource_group, file))),
         start_block=start_block,
         end_block=end_block,
         batch_size=batch_size,
@@ -75,3 +75,10 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
     compare_lines_ignore_order(
         read_resource(resource_group, 'expected_transactions.json'), read_file(transactions_output_file)
     )
+
+    print('=====================')
+    print(read_file(transactions_output_file))
+    compare_lines_ignore_order(
+        read_resource(resource_group, 'expected_actions.json'), read_file(actions_output_file)
+    )
+

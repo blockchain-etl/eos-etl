@@ -25,7 +25,6 @@ import click
 import re
 
 from datetime import datetime, timedelta
-from eosetl.enumeration.chain import Chain
 from eosetl.jobs.export_all import export_all as do_export_all
 from eosetl.service.eos_block_range_service import EosBlockRangeService
 from eosetl.rpc.eos_rpc import EosRpc
@@ -93,9 +92,7 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 @click.option('-o', '--output-dir', default='output', type=str, help='Output directory, partitioned in Hive style.')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
 @click.option('-B', '--export-batch-size', default=1, type=int, help='The number of requests in JSON RPC batches.')
-@click.option('-c', '--chain', default=Chain.EOS, type=click.Choice(Chain.ALL),
-              help='The type of chain')
-def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain):
+def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size):
     """Exports all data for a range of blocks."""
-    do_export_all(chain, get_partitions(start, end, partition_batch_size, provider_uri),
+    do_export_all(get_partitions(start, end, partition_batch_size, provider_uri),
                   output_dir, provider_uri, max_workers, export_batch_size)

@@ -23,6 +23,7 @@
 
 from blockchainetl.utils import pairwise
 
+
 class GraphOperations(object):
     def __init__(self, graph):
         """x axis on the graph must be integers, y value must increase strictly monotonically with increase of x"""

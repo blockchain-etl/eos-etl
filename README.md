@@ -25,14 +25,6 @@ Stream blockchain data continually to console:
 > eosetl stream -p http://user:pass@localhost:8332 --start-block 500000
 ```
 
-Stream blockchain data continually to Google Pub/Sub:
-
-```bash
-> export GOOGLE_APPLICATION_CREDENTIALS=/path_to_credentials_file.json
-> eosetl stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/eos_blockchain
-
-```
-
 For the latest version, check out the repo and call 
 ```bash
 > pip install -e .[streaming] 
@@ -44,6 +36,7 @@ For the latest version, check out the repo and call
 - [Schema](#schema)
   - [blocks.json](#blocksjson)
   - [transactions.json](#transactionsjson)
+  - [actions.json](#actionsjson)
 - [Exporting the Blockchain](#exporting-the-blockchain)
   - [Running in Docker](#running-in-docker)
   - [Command Reference](#command-reference)
@@ -90,45 +83,12 @@ input_value             | bigint                |
 output_value            | bigint                |
 fee                     | bigint                |
 
-### transaction_input
+### actions.json
 
-Field                   | Type                  |
-------------------------|-----------------------|
-index                   | bigint                | 
-spent_transaction_hash  | hex_string            | 
-spent_output_index      | bigint                | 
-script_asm              | string                |
-script_hex              | hex_string            |
-sequence                | bigint                |
-required_signatures     | bigint                |
-type                    | string                |
-addresses               | []string              |
-value                   | bigint                |
-
-### transaction_output
-
-Field                   | Type                  |
-------------------------|-----------------------|
-index                   | bigint                |
-script_asm              | string                |
-script_hex              | hex_string            |
-required_signatures     | bigint                |
-type                    | string                |
-addresses               | []string              |
-value                   | bigint                | 
+TODO
 
 
 You can find column descriptions in [schemas](https://github.com/blockchain-etl/eos-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
-
-**Notes**:
-
-1. Output values returned by Dogecoin API had precision loss in the clients prior to version 1.14.
-It's caused by this issue https://github.com/dogecoin/dogecoin/issues/1558  
-The explorers that used older versions to export the data may show incorrect address balances and transaction amounts. 
-
-1. For Zcash, `vjoinsplit` and `valueBalance` fields are converted to inputs and outputs with type 'shielded'
-https://zcash-rpc.github.io/getrawtransaction.html, https://zcash.readthedocs.io/en/latest/rtd_pages/zips/zip-0243.html
-
 
 ## Exporting the Blockchain
 
@@ -287,7 +247,7 @@ handle chain reorganizations - they are less likely the further a block from the
 ```bash
 > pip install -e .[dev]
 > echo "The below variables are optional"
-> export eosetl_EOS_PROVIDER_URI=http://api.main.alohaeos.com:80
+> export EOSETL_PROVIDER_URI=http://api.main.alohaeos.com:80
 > pytest -vv
 ```
 
@@ -300,4 +260,4 @@ handle chain reorganizations - they are less likely the further a block from the
 
 ### Public Datasets in BigQuery
 
-https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them
+TODO: https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them

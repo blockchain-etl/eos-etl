@@ -23,8 +23,8 @@
 
 from eosetl.service.eos_service import EosService
 from blockchainetl.service.graph_operations import Point
-import json
 import dateutil.parser
+
 
 class BlockTimestampGraph(object):
     def __init__(self, eos_rpc):
@@ -49,4 +49,4 @@ class BlockTimestampGraph(object):
 
 def block_to_point(block):
     block_timestamp_utc = dateutil.parser.parse(block["timestamp"] + "Z").timestamp()
-    return Point(block["block_num"],block_timestamp_utc)
+    return Point(block["block_num"], block_timestamp_utc)

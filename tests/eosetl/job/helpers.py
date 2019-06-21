@@ -26,7 +26,7 @@ from eosetl.rpc.eos_rpc import EosRpc
 from tests.eosetl.job.mock_eos_rpc import MockEosRpc
 
 
-def get_eos_rpc(provider_type, read_resource_lambda=None, chain='eos'):
+def get_eos_rpc(provider_type, read_resource_lambda=None):
     if provider_type == "mock":
         if read_resource_lambda is None:
             raise ValueError('read_resource_lambda must not be None for provider type {}'.format(provider_type))
@@ -34,7 +34,7 @@ def get_eos_rpc(provider_type, read_resource_lambda=None, chain='eos'):
 
     elif provider_type == "online":
 
-        env_variable_name = "eosetl_{}_PROVIDER_URI".format(chain.upper())
+        env_variable_name = "EOSETL_PROVIDER_URI"
         provider_uri = os.environ.get(env_variable_name)
         if provider_uri is None or len(provider_uri) == 0:
             raise ValueError('{} is required environment variable'.format(env_variable_name))

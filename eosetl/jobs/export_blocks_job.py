@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 from eosetl.mappers.action_mapper import EosActionMapper
 from eosetl.mappers.block_mapper import EosBlockMapper
 from eosetl.mappers.transaction_mapper import EosTransactionMapper
@@ -38,7 +39,6 @@ class ExportBlocksJob(BaseJob):
             eos_rpc,
             max_workers,
             item_exporter,
-            chain,
             export_blocks=True,
             export_transactions=True):
         validate_range(start_block, end_block)

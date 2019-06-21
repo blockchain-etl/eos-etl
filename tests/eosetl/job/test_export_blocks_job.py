@@ -37,12 +37,12 @@ def read_resource(resource_group, file_name):
     return tests.resources.read_resource([RESOURCE_GROUP, resource_group], file_name)
 
 
-@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type, chain", [
-    (1, 1, 1, 'eos/block_1', 'mock', 'eos'),
-    skip_if_slow_tests_disabled([1, 1, 1, 'eos/block_1', 'online', 'eos'], "eos"),
-    skip_if_slow_tests_disabled([30000000, 30000000, 1, 'eos/block_30000000', 'online', 'eos'], "eos"),
+@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type", [
+    (1, 1, 1, 'eos/block_1', 'mock'),
+    skip_if_slow_tests_disabled([1, 1, 1, 'eos/block_1', 'online']),
+    skip_if_slow_tests_disabled([30000000, 30000000, 1, 'eos/block_30000000', 'online']),
 ])
-def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, provider_type, chain):
+def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, provider_type):
     blocks_output_file = str(tmpdir.join('actual_block.json'))
     transactions_output_file = str(tmpdir.join("actual_transactions.json"))
     actions_output_file = str(tmpdir.join("actual_actions.json"))
@@ -54,11 +54,9 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
         eos_rpc=ThreadLocalProxy(
             lambda: get_eos_rpc(
                 provider_type,
-                read_resource_lambda=lambda file: read_resource(resource_group, file),
-                chain=chain)),
+                read_resource_lambda=lambda file: read_resource(resource_group, file))),
         max_workers=5,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file, actions_output_file),
-        chain=chain,
         export_blocks=blocks_output_file is not None,
         export_transactions=transactions_output_file is not None)
     job.run()

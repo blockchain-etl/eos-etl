@@ -1,5 +1,5 @@
 FROM python:3.6-alpine
-MAINTAINER Omidiora Samuel <samparsky@gmail.com>
+MAINTAINER Evgeny Medvedev <evge.medvedev@gmail.com>
 ENV PROJECT_DIR=eos-etl
 
 RUN mkdir /$PROJECT_DIR
