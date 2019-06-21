@@ -30,7 +30,7 @@ from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsE
 class EosBlockRangeService(object):
     def __init__(self, eos_rpc):
         graph = BlockTimestampGraph(eos_rpc)
-        self._graph_operations = GraphOperations(graph)
+        self._graph_operations = GraphOperations(graph, max_not_monotonic_points=5, prefetch_size=0)
 
     def get_block_range_for_date(self, date):
         start_datetime = datetime.combine(date, datetime.min.time().replace(tzinfo=timezone.utc))

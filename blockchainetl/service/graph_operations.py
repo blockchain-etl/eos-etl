@@ -20,15 +20,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
-from blockchainetl.utils import pairwise
+import itertools
 
 
 class GraphOperations(object):
-    def __init__(self, graph):
-        """x axis on the graph must be integers, y value must increase strictly monotonically with increase of x"""
+    def __init__(self, graph, max_not_monotonic_points=10, prefetch_size=5):
+        """x axis on the graph must be integers.
+        max_not_monotonic_points indicates the maximum difference of the x coordinate for any two points
+        (x1, y1) and (x2, y2) such that x2 > x1 and y2 <= y1.
+        For strictly increasing y max_not_monotonic_points should be 0.
+        If prefetch_size is greater than 0 graph must implement get_points(xs) method."""
+
         self._graph = graph
         self._cached_points = []
+        self._max_not_monotonic_points = max_not_monotonic_points
+        self._prefetch_size = prefetch_size
 
     def get_bounds_for_y_coordinate(self, y):
         """given the y coordinate, outputs a pair of x coordinates for closest points that bound the y coordinate.
@@ -37,7 +43,15 @@ class GraphOperations(object):
         if initial_bounds is None:
             initial_bounds = self._get_first_point(), self._get_last_point()
 
-        result = self._get_bounds_for_y_coordinate_recursive(y, *initial_bounds)
+        bounds = self._get_bounds_for_y_coordinate_recursive(y, *initial_bounds)
+
+        if self._max_not_monotonic_points > 0:
+            # in case block times are not monotonic we need to find other bounds around the found ones
+            result = self._find_point_around_y(y, bounds[0], find_below=True, move_left=False), \
+                     self._find_point_around_y(y, bounds[1], find_below=False, move_left=True)
+        else:
+            result = bounds
+
         return result
 
     def _get_bounds_for_y_coordinate_recursive(self, y, start, end):
@@ -51,9 +65,9 @@ class GraphOperations(object):
         elif (end.x - start.x) <= 1:
             return start.x, end.x
         else:
-            assert start.y < y < end.y
-            if start.y >= end.y:
-                raise ValueError('y must increase strictly monotonically')
+            if start.y > end.y:
+                raise ValueError('Start y must be lesser or equal to end y coordinate. Was {}, {}'
+                                 .format(start.y, end.y))
 
             # Interpolation Search https://en.wikipedia.org/wiki/Interpolation_search, O(log(log(n)) average case.
             # Improvements for worst case:
@@ -86,10 +100,70 @@ class GraphOperations(object):
 
             return self._get_bounds_for_y_coordinate_recursive(y, *bounds)
 
-    def _get_point(self, x):
-        point = self._graph.get_point(x)
-        self._cached_points.append(point)
-        return point
+    def _find_point_around_y(self, y, x, find_below, move_left):
+        find_above = not find_below
+        move_right = not move_left
+
+        first_point = self._get_first_point()
+        last_point = self._get_last_point()
+        point = self._get_point(x)
+
+        next_point = point
+        best_point = point
+        iteration = 0
+
+        increment = - 1 if move_left else 1
+        while iteration < self._max_not_monotonic_points \
+                and first_point.x <= (next_point.x + increment) <= last_point.x:
+            prev_point = next_point
+
+            next_point_x = next_point.x + increment
+
+            prefetch_left = min(self._prefetch_size if move_left else 0, next_point_x - first_point.x)
+            prefetch_right = min(self._prefetch_size if move_right else 0, max(last_point.x - next_point_x - 1, 0))
+            next_point = self._get_point(next_point_x, prefetch_left=prefetch_left, prefetch_right=prefetch_right)
+
+            if find_below and move_left and (next_point.y == y or next_point.y < y < prev_point.y):
+                best_point = next_point
+            if find_below and move_right and (prev_point.y == y or prev_point.y < y < next_point.y):
+                best_point = prev_point
+            if find_above and move_left and (prev_point.y == y or next_point.y < y < prev_point.y):
+                best_point = prev_point
+            if find_above and move_right and (next_point.y == y or prev_point.y < y < next_point.y):
+                best_point = next_point
+
+            iteration = iteration + 1
+
+        return best_point.x
+
+    def _find_point_in_cache(self, x):
+        for point in self._cached_points:
+            if point.x == x:
+                return point
+        return None
+
+    def _get_point(self, x, prefetch_left=0, prefetch_right=0):
+        prefetch_left = max(prefetch_left, 0)
+        prefetch_right = max(prefetch_right, 0)
+        cached_point = self._find_point_in_cache(x)
+        if cached_point is not None:
+            return cached_point
+        else:
+            if prefetch_left == 0 and prefetch_right == 0:
+                point = self._graph.get_point(x)
+                self._cached_points.append(point)
+                return point
+            else:
+                xs = [x]
+                for i in range(x - prefetch_left, x):
+                    xs.append(i)
+                for i in range(x + 1, x + prefetch_right + 1):
+                    xs.append(i)
+                points = self._graph.get_points(xs)
+                for point in points:
+                    self._cached_points.append(point)
+                point = [p for p in points if p.x == x][0]
+                return point
 
     def _get_first_point(self):
         point = self._graph.get_first_point()
@@ -103,7 +177,7 @@ class GraphOperations(object):
 
 
 def find_best_bounds(y, points):
-    sorted_points = sorted(points, key=lambda point: point.y)
+    sorted_points = sorted(points, key=lambda point: point.x)
     for point1, point2 in pairwise(sorted_points):
         if point1.y <= y <= point2.y:
             return point1, point2
@@ -114,8 +188,9 @@ def interpolate(point1, point2, y):
     x1, y1 = point1.x, point1.y
     x2, y2 = point2.x, point2.y
     if y1 == y2:
-        raise ValueError('The y coordinate for points is the same {}, {}'.format(point1, point2))
-    x = int((y - y1) * (x2 - x1) / (y2 - y1) + x1)
+        x = int((x1 + x2) / 2)
+    else:
+        x = int((y - y1) * (x2 - x1) / (y2 - y1) + x1)
     return x
 
 
@@ -131,6 +206,13 @@ def bound(x, bounds):
         return x
 
 
+def pairwise(iterable):
+    """s -> (s0,s1), (s1,s2), (s2, s3), ..."""
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return zip(a, b)
+
+
 class OutOfBoundsError(Exception):
     pass
 
@@ -142,3 +224,6 @@ class Point(object):
 
     def __str__(self):
         return '({},{})'.format(self.x, self.y)
+
+    def __repr__(self):
+        return 'Point({},{})'.format(self.x, self.y)

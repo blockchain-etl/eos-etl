@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,13 +32,15 @@ from tests.helpers import skip_if_slow_tests_disabled
 @pytest.mark.parametrize("date,expected_start_block,expected_end_block", [
     skip_if_slow_tests_disabled(['2018-06-08', 1, 1]),
     skip_if_slow_tests_disabled(['2018-06-09', 2, 13338]),
+    skip_if_slow_tests_disabled(['2018-11-01', 24569043, 24741696]),
+    skip_if_slow_tests_disabled(['2018-11-02', 24741697, 24914090]),
     skip_if_slow_tests_disabled(['2019-06-01', 61118944, 61291688]),
 ])
 def test_get_block_range_for_date(date, expected_start_block, expected_end_block):
     eos_block_range_service = get_new_eos_block_range_service()
     parsed_date = parse(date)
     blocks = eos_block_range_service.get_block_range_for_date(parsed_date)
-    assert blocks == (expected_start_block, expected_end_block)
+    assert (expected_start_block, expected_end_block) == blocks
 
 
 @pytest.mark.parametrize("date", [
