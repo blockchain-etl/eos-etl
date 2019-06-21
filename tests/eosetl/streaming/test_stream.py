@@ -25,8 +25,9 @@ import os
 import pytest
 
 import tests.resources
+from blockchainetl_common.streaming.streamer import Streamer
 from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
-from eosetl.streaming.stream import stream
+from eosetl.streaming.eos_streamer_adapter import EosStreamerAdapter
 from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 from tests.eosetl.job.helpers import get_eos_rpc
 from tests.helpers import compare_lines_ignore_order, read_file, skip_if_slow_tests_disabled
@@ -53,16 +54,22 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
     transactions_output_file = str(tmpdir.join("actual_transactions.json"))
     actions_output_file = str(tmpdir.join("actual_actions.json"))
 
-    stream(
+    streamer_adapter = EosStreamerAdapter(
         eos_rpc=ThreadLocalProxy(
             lambda: get_eos_rpc(
                 provider_type,
                 read_resource_lambda=lambda file: read_resource(resource_group, file))),
+        batch_size=batch_size,
+        item_exporter=blocks_and_transactions_item_exporter(
+            blocks_output_file, transactions_output_file, actions_output_file),
+    )
+    streamer = Streamer(
+        blockchain_streamer_adapter=streamer_adapter,
         start_block=start_block,
         end_block=end_block,
-        batch_size=batch_size,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file, actions_output_file)
+        retry_errors=False
     )
+    streamer.stream()
 
     print('=====================')
     print(read_file(blocks_output_file))
@@ -77,8 +84,7 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
     )
 
     print('=====================')
-    print(read_file(transactions_output_file))
+    print(read_file(actions_output_file))
     compare_lines_ignore_order(
         read_resource(resource_group, 'expected_actions.json'), read_file(actions_output_file)
     )
-
