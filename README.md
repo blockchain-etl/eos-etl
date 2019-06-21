@@ -1,10 +1,10 @@
-# Bitcoin ETL
+# EOS ETL
 
 [![Join the chat at https://gitter.im/ethereum-eth](https://badges.gitter.im/ethereum-etl.svg)](https://gitter.im/ethereum-etl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/blockchain-etl/eos-etl.png)](https://travis-ci.org/blockchain-etl/eos-etl)
 [Join Telegram Group](https://t.me/joinchat/GsMpbA3mv1OJ6YMp3T5ORQ)
 
-Install Bitcoin ETL:
+Install EOS ETL:
 
 ```bash
 pip install eos-etl
@@ -14,17 +14,9 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
 
 ```bash
 > eosetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
---provider-uri http://user:pass@localhost:8332 --chain bitcoin \
- --blocks-output blocks.json --transactions-output transactions.json
+--provider-uri http://user:pass@localhost:8332 \
+--blocks-output blocks.json --transactions-output transactions.json
 ```
-
-Supported chains:
-- bitcoin
-- bitcoin_cash
-- dogecoin
-- litecoin
-- dash
-- zcash
 
 Stream blockchain data continually to console:
 
@@ -37,7 +29,7 @@ Stream blockchain data continually to Google Pub/Sub:
 
 ```bash
 > export GOOGLE_APPLICATION_CREDENTIALS=/path_to_credentials_file.json
-> eosetl stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/bitcoin_blockchain
+> eosetl stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/eos_blockchain
 
 ```
 
@@ -142,13 +134,21 @@ https://zcash-rpc.github.io/getrawtransaction.html, https://zcash.readthedocs.io
 
 1. Install python 3.5.3+ https://www.python.org/downloads/
 
-1. Install Bitcoin node https://hackernoon.com/a-complete-beginners-guide-to-installing-a-bitcoin-full-node-on-linux-2018-edition-cb8e384479ea
+1. Install EOS node or get access to EOS node maintained by someone else (because running your own node is not so easy).
+Some docs:
+- [https://developers.eos.io/eosio-nodeos/docs/](https://developers.eos.io/eosio-nodeos/docs/)
+- [https://eosnode.tools/](https://eosnode.tools/)
+- [https://github.com/CryptoLions/EOS-MainNet](https://github.com/CryptoLions/EOS-MainNet)
 
-1. Start Bitcoin.
-Make sure it downloaded the blocks that you need by executing `$ bitcoin-cli getblockchaininfo` in the terminal.
-You can export blocks below `blocks`, there is no need to wait until the full sync
+1. Make sure it downloaded the blocks that you need by executing in the terminal:
+```bash
+curl --request POST \
+  --url https://localhost:8080/v1/chain/get_info \
+  --header 'accept: application/json'
+```
+You can export blocks below `last_irreversible_block_num`, there is no need to wait until the full sync
 
-1. Install Bitcoin ETL:
+1. Install EOS ETL:
 
     ```bash
     > pip install eos-etl
@@ -158,10 +158,11 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 
     ```bash
     > eosetl export_all --start 0 --end 499999  \
-    --partition-batch-size 100 \
-    --provider-uri http://user:pass@localhost:8332 --chain bitcoin
+    --provider-uri http://user:pass@localhost:8332
     ```
     
+    In case `eosetl` command is not available in PATH, use `python -m eosetl` instead.
+  
     The result will be in the `output` subdirectory, partitioned in Hive style:
 
     ```bash
@@ -170,10 +171,10 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     ...
     output/transactions/start_block=00000000/end_block=00000099/transactions_00000000_00000099.csv
     ...
+    output/actions/start_block=00000000/end_block=00000099/actions_00000000_00000099.csv
+    ...
     ```
     
-    In case `eosetl` command is not available in PATH, use `python -m eosetl` instead.
-
 ### Running in Docker
 
 1. Install Docker https://docs.docker.com/install/
@@ -208,7 +209,6 @@ Google Kubernetes Engine.
 ### Command Reference
 
 - [export_blocks_and_transactions](#export_blocks_and_transactions)
-- [enrich_transactions](#enrich_transactions)
 - [get_block_range_for_date](#get_block_range_for_date)
 - [export_all](#export_all)
 - [stream](#stream)
@@ -251,19 +251,6 @@ Omit `--blocks-output` or `--transactions-output` or `--actions-output` options 
 
 You can tune `--max-workers` for performance.
 
-Note that `required_signatures`, `type`, `addresses`, and `value` fields will be empty in transactions inputs. 
-Use [enrich_transactions](#enrich_transactions) to populate those fields.
-
-#### enrich_transactions
-
-```bash
-> python eosetl.py enrich_transactions  \
-  --provider-uri http://user:pass@localhost:8332 \
-  --transactions-input transactions.json --transactions-output enriched_transactions.json
-```
-
-You can tune `--batch-size`, `--max-workers` for performance.
-
 #### get_block_range_for_date
 
 ```bash
@@ -286,13 +273,12 @@ You can tune `--export-batch-size`, `--max-workers` for performance.
 
 - This command outputs blocks and transactions to the console by default.
 - Use `--output` option to specify the Google Pub/Sub topic where to publish blockchain data, 
-e.g. `projects/your-project/topics/bitcoin_blockchain`.
+e.g. `projects/your-project/topics/eos_blockchain`.
 - The command saves its state to `last_synced_block.txt` file where the last synced block number is saved periodically.
 - Specify either `--start-block` or `--last-synced-block-file` option. `--last-synced-block-file` should point to the 
 file where the block number, from which to start streaming the blockchain data, is saved.
 - Use the `--lag` option to specify how many blocks to lag behind the head of the blockchain. It's the simplest way to 
 handle chain reorganizations - they are less likely the further a block from the head.
-- Use the `--chain` option to specify the type of the chain, e.g. `bitcoin`, `litecoin`, `dash`, `zcash`, etc.
 - You can tune `--period-seconds`, `--batch-size`, `--max-workers` for performance.
  
 
