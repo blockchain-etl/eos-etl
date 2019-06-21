@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com, Vasiliy Bondarenko vabondarenko@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,6 @@
 # SOFTWARE.
 
 
-from eosetl.domain.block import BtcBlock
 from eosetl.mappers.transaction_mapper import EosTransactionMapper
 
 

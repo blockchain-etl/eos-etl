@@ -48,9 +48,9 @@ from tests.helpers import skip_if_slow_tests_disabled
     skip_if_slow_tests_disabled(['zcash', '2016-10-28', 0, 629], chain='zcash'),
 ])
 def test_get_block_range_for_date(chain, date, expected_start_block, expected_end_block):
-    btc_block_range_service = get_new_eos_block_range_service(chain)
+    eos_block_range_service = get_new_eos_block_range_service(chain)
     parsed_date = parse(date)
-    blocks = btc_block_range_service.get_block_range_for_date(parsed_date)
+    blocks = eos_block_range_service.get_block_range_for_date(parsed_date)
     assert blocks == (expected_start_block, expected_end_block)
 
 
@@ -58,10 +58,10 @@ def test_get_block_range_for_date(chain, date, expected_start_block, expected_en
     skip_if_slow_tests_disabled(['bitcoin','2030-01-01'], chain='bitcoin')
 ])
 def test_get_block_range_for_date_fail(chain, date):
-    btc_service = get_new_eos_block_range_service(chain)
+    eos_service = get_new_eos_block_range_service(chain)
     parsed_date = parse(date)
     with pytest.raises(OutOfBoundsError):
-        btc_service.get_block_range_for_date(parsed_date)
+        eos_service.get_block_range_for_date(parsed_date)
 
 
 @pytest.mark.parametrize("chain,start_timestamp,end_timestamp,expected_start_block,expected_end_block", [

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com, Vasiliy Bondarenko vabondarenko@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from blockchainetl.utils import rpc_response_batch_to_results
-from eosetl.enumeration.chain import Chain
-from eosetl.json_rpc_requests import generate_get_block_hash_by_number_json_rpc
 from eosetl.mappers.action_mapper import EosActionMapper
 from eosetl.mappers.block_mapper import EosBlockMapper
 from eosetl.mappers.transaction_mapper import EosTransactionMapper
@@ -53,11 +50,5 @@ class EosService(object):
 
         # block_hashes = self.get_block_hashes(block_number_batch)
         # return self.get_blocks_by_hashes(block_hashes, with_transactions)
-
-    def get_block_hashes(self, block_number_batch):
-        block_hash_rpc = list(generate_get_block_hash_by_number_json_rpc(block_number_batch))
-        block_hashes_response = self.eos_rpc.batch(block_hash_rpc)
-        block_hashes = rpc_response_batch_to_results(block_hashes_response)
-        return block_hashes
 
 ADDRESS_TYPE_SHIELDED = 'shielded'

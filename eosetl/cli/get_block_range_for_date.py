@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com, Vasiliy Bondarenko vabondarenko@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -43,9 +43,9 @@ def get_block_range_for_date(provider_uri, date, output):
     """Outputs start and end blocks for given date."""
 
     eos_rpc = EosRpc(provider_uri)
-    btc_service = EosBlockRangeService(eos_rpc)
+    eos_service = EosBlockRangeService(eos_rpc)
 
-    start_block, end_block = btc_service.get_block_range_for_date(date)
+    start_block, end_block = eos_service.get_block_range_for_date(date)
 
     with smart_open(output, 'w') as output_file:
         output_file.write('{},{}\n'.format(start_block, end_block))

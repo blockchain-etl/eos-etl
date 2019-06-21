@@ -52,12 +52,12 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 
         day = timedelta(days=1)
 
-        btc_service = EosBlockRangeService(
+        eos_service = EosBlockRangeService(
             eos_rpc=ThreadLocalProxy(lambda: EosRpc(provider_uri))
         )
 
         while start_date <= end_date:
-            batch_start_block, batch_end_block = btc_service.get_block_range_for_date(start_date)
+            batch_start_block, batch_end_block = eos_service.get_block_range_for_date(start_date)
             partition_dir = '/date={start_date!s}/'.format(start_date=start_date)
             yield batch_start_block, batch_end_block, partition_dir, start_date
             start_date += day

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com, Vasiliy Bondarenko vabondarenko@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from eosetl.mappers.transaction_input_mapper import BtcTransactionInputMapper
 import json
 
-# http://chainquery.com/bitcoin-api/getblock
-# http://chainquery.com/bitcoin-api/getrawtransaction
 class EosTransactionMapper(object):
 
     def __init__(self):
-        self.transaction_input_mapper = BtcTransactionInputMapper()
+        pass
 
     def transaction_to_dict(self, transaction, block = False):
         try:
