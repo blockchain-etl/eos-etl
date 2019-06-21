@@ -46,7 +46,7 @@ class EosBlockRangeService(object):
         try:
             start_block_bounds = self._graph_operations.get_bounds_for_y_coordinate(start_timestamp)
         except OutOfBoundsError:
-            start_block_bounds = (0, 0)
+            start_block_bounds = (1, 1)
 
         try:
             end_block_bounds = self._graph_operations.get_bounds_for_y_coordinate(end_timestamp)

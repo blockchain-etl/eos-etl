@@ -30,8 +30,9 @@ from tests.helpers import skip_if_slow_tests_disabled
 
 
 @pytest.mark.parametrize("date,expected_start_block,expected_end_block", [
-    skip_if_slow_tests_disabled(['2018-06-08', 0, 1]),
+    skip_if_slow_tests_disabled(['2018-06-08', 1, 1]),
     skip_if_slow_tests_disabled(['2018-06-09', 2, 13338]),
+    skip_if_slow_tests_disabled(['2019-06-01', 61118944, 61291688]),
 ])
 def test_get_block_range_for_date(date, expected_start_block, expected_end_block):
     eos_block_range_service = get_new_eos_block_range_service()
