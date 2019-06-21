@@ -10,7 +10,7 @@ Install EOS ETL:
 pip install eos-etl
 ```
 
-Export blocks, transactions and actions ([Schema](#blocksjson), [Reference](#export_blocks)):
+Export blocks, transactions and actions ([Schema](#schema), [Reference](#export_blocks)):
 
 ```bash
 > eosetl export_blocks --start-block 0 --end-block 500000 \
