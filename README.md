@@ -224,7 +224,7 @@ Usage: eosetl.py export_blocks_and_transactions [OPTIONS]
 Options:
   -s, --start-block INTEGER   Start block
   -e, --end-block INTEGER     End block  [required]
-  -p, --provider-uri TEXT     The URI of the remote Bitcoin node
+  -p, --provider-uri TEXT     The URI of the remote EOS node
   -w, --max-workers INTEGER   The maximum number of workers.
   --blocks-output TEXT        The output file for blocks. If not provided
                               blocks will not be exported. Use "-" for stdout
