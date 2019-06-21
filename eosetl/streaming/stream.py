@@ -27,10 +27,10 @@ import time
 
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
 from eosetl.service.eos_service import EosService
-from blockchainetl.file_utils import smart_open
-from blockchainetl.jobs.exporters.console_item_exporter import ConsoleItemExporter
-from blockchainetl.jobs.exporters.in_memory_item_exporter import InMemoryItemExporter
-from blockchainetl.logging_utils import logging_basic_config
+from blockchainetl_common.file_utils import smart_open
+from blockchainetl_common.jobs.exporters.console_item_exporter import ConsoleItemExporter
+from blockchainetl_common.jobs.exporters.in_memory_item_exporter import InMemoryItemExporter
+from blockchainetl_common.logging_utils import logging_basic_config
 
 logging_basic_config()
 

@@ -24,9 +24,9 @@ from eosetl.mappers.action_mapper import EosActionMapper
 from eosetl.mappers.block_mapper import EosBlockMapper
 from eosetl.mappers.transaction_mapper import EosTransactionMapper
 from eosetl.service.eos_service import EosService
-from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
-from blockchainetl.jobs.base_job import BaseJob
-from blockchainetl.utils import validate_range
+from blockchainetl_common.executors.batch_work_executor import BatchWorkExecutor
+from blockchainetl_common.jobs.base_job import BaseJob
+from blockchainetl_common.utils import validate_range
 
 
 # Exports blocks and transactions

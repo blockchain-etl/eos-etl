@@ -24,7 +24,7 @@
 from datetime import datetime, timezone
 
 from eosetl.service.eos_block_timestamp_graph import BlockTimestampGraph
-from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsError
+from blockchainetl_common.graph.graph_operations import GraphOperations, OutOfBoundsError
 
 
 class EosBlockRangeService(object):

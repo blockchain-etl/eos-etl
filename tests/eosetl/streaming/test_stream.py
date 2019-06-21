@@ -27,7 +27,7 @@ import pytest
 import tests.resources
 from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from eosetl.streaming.stream import stream
-from blockchainetl.thread_local_proxy import ThreadLocalProxy
+from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 from tests.eosetl.job.helpers import get_eos_rpc
 from tests.helpers import compare_lines_ignore_order, read_file, skip_if_slow_tests_disabled
 

@@ -27,8 +27,8 @@ import click
 from eosetl.rpc.eos_rpc import EosRpc
 
 from eosetl.service.eos_block_range_service import EosBlockRangeService
-from blockchainetl.file_utils import smart_open
-from blockchainetl.logging_utils import logging_basic_config
+from blockchainetl_common.file_utils import smart_open
+from blockchainetl_common.logging_utils import logging_basic_config
 
 logging_basic_config()
 

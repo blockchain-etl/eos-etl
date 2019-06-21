@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 from eosetl.jobs.export_all import export_all as do_export_all
 from eosetl.service.eos_block_range_service import EosBlockRangeService
 from eosetl.rpc.eos_rpc import EosRpc
-from blockchainetl.thread_local_proxy import ThreadLocalProxy
+from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 
 
 def is_date_range(start, end):

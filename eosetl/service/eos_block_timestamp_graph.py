@@ -22,7 +22,7 @@
 
 
 from eosetl.service.eos_service import EosService
-from blockchainetl.service.graph_operations import Point
+from blockchainetl_common.graph.graph_operations import Point
 import dateutil.parser
 
 

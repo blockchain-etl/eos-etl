@@ -23,7 +23,6 @@ import click
 
 from eosetl.cli.export_blocks_and_transactions import export_blocks_and_transactions
 from eosetl.cli.export_all import export_all
-from eosetl.cli.filter_items import filter_items
 from eosetl.cli.get_block_range_for_date import get_block_range_for_date
 from eosetl.cli.stream import stream
 
@@ -43,5 +42,4 @@ cli.add_command(export_all, "export_all")
 cli.add_command(stream, "stream")
 
 # utils
-cli.add_command(filter_items, "filter_items")
 cli.add_command(get_block_range_for_date, "get_block_range_for_date")

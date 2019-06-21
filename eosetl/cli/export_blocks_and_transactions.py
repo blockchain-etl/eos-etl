@@ -27,8 +27,8 @@ import click
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
 from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from eosetl.rpc.eos_rpc import EosRpc
-from blockchainetl.logging_utils import logging_basic_config
-from blockchainetl.thread_local_proxy import ThreadLocalProxy
+from blockchainetl_common.logging_utils import logging_basic_config
+from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 
 logging_basic_config()
 

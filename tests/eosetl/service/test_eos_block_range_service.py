@@ -24,7 +24,7 @@ import pytest
 from dateutil.parser import parse
 
 from eosetl.service.eos_block_range_service import EosBlockRangeService
-from blockchainetl.service.graph_operations import OutOfBoundsError
+from blockchainetl_common.graph.graph_operations import OutOfBoundsError
 from tests.eosetl.job.helpers import get_eos_rpc
 from tests.helpers import skip_if_slow_tests_disabled
 

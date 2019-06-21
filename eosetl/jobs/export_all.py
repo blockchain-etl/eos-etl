@@ -1,7 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, Evgeny Medvedev, evge.medvedev@gmail.com, samparsky@gmail.com,
-# Vasiliy Bondarenko, vabondarenko@gmail.com
+# Copyright (c) 2019 Evgeny Medvedev, evge.medvedev@gmail.com, Vasiliy Bondarenko, vabondarenko@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import datetime
 import logging
 import os
-import shutil
 from time import time
 
+from blockchainetl_common.logging_utils import logging_basic_config
+from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
 from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from eosetl.rpc.eos_rpc import EosRpc
-from blockchainetl.logging_utils import logging_basic_config
-from blockchainetl.misc_utils import filter_items
-from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
 logging_basic_config()
 logger = logging.getLogger('export_all')
@@ -107,31 +103,8 @@ def export_all(partitions, output_dir, provider_uri, max_workers, batch_size):
             export_transactions=transactions_file is not None)
         job.run()
 
-        if args is not None and len(args) > 0:
-            date = args[0]
-            logger.info('Filtering blocks {blocks_file} by date {date}'.format(
-                blocks_file=blocks_file,
-                date=date,
-            ))
-
-            def filter_by_date(item, field):
-                return datetime.datetime.fromtimestamp(item[field]).astimezone(datetime.timezone.utc) \
-                           .strftime('%Y-%m-%d') == date.strftime('%Y-%m-%d')
-
-            filtered_blocks_file = blocks_file + '.filtered'
-            filter_items(blocks_file, filtered_blocks_file, lambda item: filter_by_date(item, 'timestamp'))
-            shutil.move(filtered_blocks_file, blocks_file)
-
-            logger.info('Filtering transactions {transactions_file} by date {date}'.format(
-                transactions_file=transactions_file,
-                date=date,
-            ))
-
-            filtered_transactions_file = transactions_file + '.filtered'
-            filter_items(transactions_file, filtered_transactions_file, lambda item: filter_by_date(item, 'block_timestamp'))
-            shutil.move(filtered_transactions_file, transactions_file)
-
         # # # finish # # #
+
         end_time = time()
         time_diff = round(end_time - start_time, 5)
         logger.info('Exporting blocks {block_range} took {time_diff} seconds'.format(
