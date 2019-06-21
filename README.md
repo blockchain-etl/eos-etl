@@ -13,7 +13,7 @@ pip install eos-etl
 Export blocks, transactions and actions ([Schema](#schema), [Reference](#export_blocks)):
 
 ```bash
-> eosetl export_blocks --start-block 0 --end-block 500000 \
+> eosetl export_blocks --start-block 1 --end-block 500000 \
 --provider-uri http://api.main.alohaeos.com \
 --blocks-output blocks.json --transactions-output transactions.json --actions-output actions.json
 ```
@@ -72,7 +72,7 @@ You can export blocks below `last_irreversible_block_num`, there is no need to w
 1. Export blocks, transactions and actions:
 
     ```bash
-    > eosetl export_all --start 0 --end 499999  \
+    > eosetl export_all --start 1 --end 499999  \
     --provider-uri http://api.main.alohaeos.com
     ```
     
@@ -157,7 +157,7 @@ For the `--output` parameters the supported type is json. The format type is inf
 #### export_blocks
 
 ```bash
-> python eosetl.py export_blocks --start-block 0 --end-block 500000 \
+> python eosetl.py export_blocks --start-block 1 --end-block 500000 \
   --provider-uri http://api.main.alohaeos.com \
   --blocks-output blocks.json --transactions-output transactions.json --actions-output actions.json
 ```

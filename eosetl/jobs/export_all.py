@@ -91,6 +91,10 @@ def export_all(partitions, output_dir, provider_uri, max_workers, batch_size):
             block_range=block_range,
             transactions_file=transactions_file,
         ))
+        logger.info('Exporting actions from blocks {block_range} to {actions_file}'.format(
+            block_range=block_range,
+            actions_file=actions_file,
+        ))
 
         job = ExportBlocksJob(
             start_block=batch_start_block,
