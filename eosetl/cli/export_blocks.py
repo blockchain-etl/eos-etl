@@ -24,7 +24,7 @@
 import click
 
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
-from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
+from eosetl.jobs.exporters.blocks_item_exporter import blocks_item_exporter
 from eosetl.rpc.eos_rpc import EosRpc
 from blockchainetl_common.logging_utils import logging_basic_config
 from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
@@ -35,7 +35,6 @@ logging_basic_config()
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-s', '--start-block', default=0, type=int, help='Start block')
 @click.option('-e', '--end-block', required=True, type=int, help='End block')
-# @click.option('-b', '--batch-size', default=1, type=int, help='The number of blocks to export at a time.')
 @click.option('-p', '--provider-uri', default='http://api.main.alohaeos.com', type=str,
               help='The URI of the remote EOS node')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
@@ -48,21 +47,20 @@ logging_basic_config()
 @click.option('--actions-output', default=None, type=str,
               help='The output file for actions. '
                    'If not provided transactions will not be exported. Use "-" for stdout')
-def export_blocks_and_transactions(start_block, end_block, provider_uri,
-                                   max_workers, blocks_output, transactions_output, actions_output):
-    """Export blocks and transactions."""
-    batch_size = 1
+def export_blocks(start_block, end_block, provider_uri,
+                  max_workers, blocks_output, transactions_output, actions_output):
+    """Export blocks, transactions and actions."""
 
-    if blocks_output is None and transactions_output is None:
-        raise ValueError('Either --blocks-output or --transactions-output options must be provided')
+    if blocks_output is None and transactions_output is None and actions_output is None:
+        raise ValueError('Either --blocks-output or --transactions-output or --actions-output options must be provided')
 
     job = ExportBlocksJob(
         start_block=start_block,
         end_block=end_block,
-        batch_size=batch_size,
         eos_rpc=ThreadLocalProxy(lambda: EosRpc(provider_uri)),
         max_workers=max_workers,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output, transactions_output, actions_output),
+        item_exporter=blocks_item_exporter(blocks_output, transactions_output, actions_output),
         export_blocks=blocks_output is not None,
-        export_transactions=transactions_output is not None)
+        export_transactions=transactions_output is not None,
+        export_actions=actions_output is not None)
     job.run()

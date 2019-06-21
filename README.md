@@ -10,10 +10,10 @@ Install EOS ETL:
 pip install eos-etl
 ```
 
-Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_blocks_and_transactions)):
+Export blocks, transactions and actions ([Schema](#blocksjson), [Reference](#export_blocks)):
 
 ```bash
-> eosetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
+> eosetl export_blocks --start-block 0 --end-block 500000 \
 --provider-uri http://api.main.alohaeos.com \
 --blocks-output blocks.json --transactions-output transactions.json --actions-output actions.json
 ```
@@ -47,7 +47,7 @@ For the latest version, check out the repo and call
 
 ## Exporting the Blockchain
 
-1. Install python 3.5.3+ https://www.python.org/downloads/
+1. Install python 3.5.0+ https://www.python.org/downloads/
 
 1. Install EOS node or get access to EOS node maintained by someone else (because running your own node is not so easy).
 Some docs:
@@ -69,7 +69,7 @@ You can export blocks below `last_irreversible_block_num`, there is no need to w
     > pip install eos-etl
     ```
 
-1. Export blocks & transactions:
+1. Export blocks, transactions and actions:
 
     ```bash
     > eosetl export_all --start 0 --end 499999  \
@@ -103,7 +103,7 @@ You can export blocks below `last_irreversible_block_num`, there is no need to w
 1. Run a container out of the image
     ```bash
     > MSYS_NO_PATHCONV=1 docker run -v $HOME/output:/eos-etl/output eos-etl:latest \
-        export_blocks_and_transactions --max-workers 50 --start-block 30000000 \
+        export_blocks --max-workers 50 --start-block 30000000 \
         --end-block 30000100 --provider-uri http://your_eos_node:node_port \
         --blocks-output ./output/blocks.csv --transactions-output ./output/transactions.csv \
         --actions-output ./output/actions.csv
@@ -123,7 +123,7 @@ Google Kubernetes Engine.
 
 ### Command Reference
 
-- [export_blocks_and_transactions](#export_blocks_and_transactions)
+- [export_blocks](#export_blocks)
 - [get_block_range_for_date](#get_block_range_for_date)
 - [export_all](#export_all)
 - [stream](#stream)
@@ -131,10 +131,10 @@ Google Kubernetes Engine.
 All the commands accept `-h` parameter for help, e.g.:
 
 ```bash
-> python eosetl.py export_blocks_and_transactions --help
-Usage: eosetl.py export_blocks_and_transactions [OPTIONS]
+> python eosetl.py export_blocks --help
+Usage: eosetl.py export_blocks [OPTIONS]
 
-  Export blocks and transactions.
+  Export blocks, transactions and actions.
 
 Options:
   -s, --start-block INTEGER   Start block
@@ -154,10 +154,10 @@ Options:
 
 For the `--output` parameters the supported type is json. The format type is inferred from the output file name.
 
-#### export_blocks_and_transactions
+#### export_blocks
 
 ```bash
-> python eosetl.py export_blocks_and_transactions --start-block 0 --end-block 500000 \
+> python eosetl.py export_blocks --start-block 0 --end-block 500000 \
   --provider-uri http://api.main.alohaeos.com \
   --blocks-output blocks.json --transactions-output transactions.json --actions-output actions.json
 ```

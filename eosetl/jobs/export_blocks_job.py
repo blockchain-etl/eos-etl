@@ -35,12 +35,13 @@ class ExportBlocksJob(BaseJob):
             self,
             start_block,
             end_block,
-            batch_size,
             eos_rpc,
             max_workers,
             item_exporter,
+            batch_size=1,
             export_blocks=True,
-            export_transactions=True):
+            export_transactions=True,
+            export_actions=True):
         validate_range(start_block, end_block)
         self.start_block = start_block
         self.end_block = end_block
@@ -50,8 +51,9 @@ class ExportBlocksJob(BaseJob):
 
         self.export_blocks = export_blocks
         self.export_transactions = export_transactions
-        if not self.export_blocks and not self.export_transactions:
-            raise ValueError('At least one of export_blocks or export_transactions must be True')
+        self.export_actions = export_actions
+        if not self.export_blocks and not self.export_transactions and not self.export_actions:
+            raise ValueError('At least one of export_blocks or export_transactions or export_actions must be True')
 
         self.eos_service = EosService(eos_rpc)
         self.block_mapper = EosBlockMapper()
@@ -75,30 +77,25 @@ class ExportBlocksJob(BaseJob):
             self._export_transactions(block)
 
     def _export_block(self, block):
-        if not self.export_blocks:
-            return
-
-        self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
+        if self.export_blocks:
+            self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
 
     def _export_transactions(self, block):
-        if not self.export_transactions:
-            return
-
-        for transaction in block["transactions"]:
-            self._export_transaction(transaction, block)
+        if self.export_transactions:
+            for transaction in block["transactions"]:
+                self._export_transaction(transaction, block)
 
     def _export_transaction(self, transaction, block):
         transaction_dict = self.transaction_mapper.transaction_to_dict(transaction, block)
-        if not transaction_dict: # skip if None returned
+        if not transaction_dict:  # skip if None returned
             return
 
         self.item_exporter.export_item(transaction_dict)
-        if transaction_dict.get("trx.transaction.actions") is None:
-            return
 
-        for action in transaction_dict["trx.transaction.actions"]:
-            action_dict = self.action_mapper.action_to_dict(action, transaction_dict, block)
-            self.item_exporter.export_item(action_dict)
+        if self.export_actions and transaction_dict.get("trx.transaction.actions") is not None:
+            for action in transaction_dict["trx.transaction.actions"]:
+                action_dict = self.action_mapper.action_to_dict(action, transaction_dict)
+                self.item_exporter.export_item(action_dict)
 
     def _end(self):
         self.batch_work_executor.shutdown()

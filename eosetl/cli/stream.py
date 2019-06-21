@@ -41,13 +41,13 @@ logging_basic_config()
                    'If not specified will print to console')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block')
 @click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs')
-@click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request')
-@click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round')
+@click.option('-b', '--batch-size', default=1, type=int, help='How many blocks to batch in single request')
+@click.option('-B', '--block-batch-size', default=1, type=int, help='How many blocks to batch in single sync round')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
 @click.option('--log-file', default=None, type=str, help='Log file')
 @click.option('--pid-file', default=None, type=str, help='pid file')
 def stream(last_synced_block_file, lag, provider_uri, output, start_block,
-           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None, pid_file=None):
+           period_seconds=10, batch_size=1, block_batch_size=1, max_workers=5, log_file=None, pid_file=None):
     """Streams all data types to console or Google Pub/Sub."""
     configure_logging(log_file)
     configure_signals()

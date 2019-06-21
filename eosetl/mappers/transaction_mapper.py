@@ -25,7 +25,7 @@ class EosTransactionMapper(object):
 
     def transaction_to_dict(self, transaction, block=None):
         # remember to update
-        # blocks_and_transactions_item_exporter.py as well
+        # blocks_item_exporter.py as well
 
         if isinstance(transaction["trx"], str):
             # this is deferred transaction, it does not include any transaction data.
@@ -37,7 +37,7 @@ class EosTransactionMapper(object):
             # }
             # todo: decide - what should we do about it?..
             # for now it's just ignored
-            return
+            return None
 
         block_hash = block.get('id') if block is not None else ''
 

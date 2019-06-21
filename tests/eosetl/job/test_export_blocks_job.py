@@ -23,7 +23,7 @@
 import pytest
 
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
-from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
+from eosetl.jobs.exporters.blocks_item_exporter import blocks_item_exporter
 from tests.eosetl.job.helpers import get_eos_rpc
 from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 
@@ -56,9 +56,10 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
                 provider_type,
                 read_resource_lambda=lambda file: read_resource(resource_group, file))),
         max_workers=5,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file, actions_output_file),
+        item_exporter=blocks_item_exporter(blocks_output_file, transactions_output_file, actions_output_file),
         export_blocks=blocks_output_file is not None,
-        export_transactions=transactions_output_file is not None)
+        export_transactions=transactions_output_file is not None,
+        export_actions=actions_output_file is not None)
     job.run()
 
     print('=====================')
@@ -72,7 +73,6 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
     compare_lines_ignore_order(
         read_resource(resource_group, 'expected_transactions.json'), read_file(transactions_output_file)
     )
-
 
     print('=====================')
     print(read_file(actions_output_file))

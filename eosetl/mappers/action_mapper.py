@@ -23,9 +23,9 @@
 
 class EosActionMapper(object):
 
-    def action_to_dict(self, action, transaction_dict, block=None):
+    def action_to_dict(self, action, transaction_dict):
         # remember to update
-        # blocks_and_transactions_item_exporter.py as well
+        # blocks_item_exporter.py as well
 
         result = {
             'type': 'action',

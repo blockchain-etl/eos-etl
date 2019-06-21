@@ -12,7 +12,7 @@ class EosStreamerAdapter:
             self,
             eos_rpc,
             item_exporter=ConsoleItemExporter(),
-            batch_size=100,
+            batch_size=1,
             max_workers=5):
         self.eos_rpc = eos_rpc
         self.eos_service = EosService(eos_rpc)
@@ -28,23 +28,23 @@ class EosStreamerAdapter:
 
     def export_all(self, start_block, end_block):
         # Export blocks and transactions
-        blocks_and_transactions_item_exporter = InMemoryItemExporter(item_types=['block', 'transaction', 'action'])
+        blocks_item_exporter = InMemoryItemExporter(item_types=['block', 'transaction', 'action'])
 
-        blocks_and_transactions_job = ExportBlocksJob(
+        blocks_job = ExportBlocksJob(
             start_block=start_block,
             end_block=end_block,
             batch_size=self.batch_size,
             eos_rpc=self.eos_rpc,
             max_workers=self.max_workers,
-            item_exporter=blocks_and_transactions_item_exporter,
+            item_exporter=blocks_item_exporter,
             export_blocks=True,
             export_transactions=True
         )
-        blocks_and_transactions_job.run()
+        blocks_job.run()
 
-        blocks = blocks_and_transactions_item_exporter.get_items('block')
-        transactions = blocks_and_transactions_item_exporter.get_items('transaction')
-        actions = blocks_and_transactions_item_exporter.get_items('action')
+        blocks = blocks_item_exporter.get_items('block')
+        transactions = blocks_item_exporter.get_items('transaction')
+        actions = blocks_item_exporter.get_items('action')
 
         logging.info('Exporting with ' + type(self.item_exporter).__name__)
         self.item_exporter.export_items(blocks + transactions + actions)

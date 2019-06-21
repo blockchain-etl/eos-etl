@@ -27,7 +27,7 @@ from time import time
 from blockchainetl_common.logging_utils import logging_basic_config
 from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
-from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
+from eosetl.jobs.exporters.blocks_item_exporter import blocks_item_exporter
 from eosetl.rpc.eos_rpc import EosRpc
 
 logging_basic_config()
@@ -98,7 +98,7 @@ def export_all(partitions, output_dir, provider_uri, max_workers, batch_size):
             batch_size=batch_size,
             eos_rpc=ThreadLocalProxy(lambda: EosRpc(provider_uri)),
             max_workers=max_workers,
-            item_exporter=blocks_and_transactions_item_exporter(blocks_file, transactions_file, actions_file),
+            item_exporter=blocks_item_exporter(blocks_file, transactions_file, actions_file),
             export_blocks=blocks_file is not None,
             export_transactions=transactions_file is not None)
         job.run()

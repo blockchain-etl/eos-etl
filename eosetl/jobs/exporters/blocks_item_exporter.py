@@ -69,7 +69,7 @@ ACTION_FIELDS_TO_EXPORT = [
 ]
 
 
-def blocks_and_transactions_item_exporter(blocks_output=None, transactions_output=None, actions_output=None):
+def blocks_item_exporter(blocks_output=None, transactions_output=None, actions_output=None):
     filename_mapping = {}
     field_mapping = {}
 

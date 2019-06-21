@@ -26,7 +26,7 @@ import pytest
 
 import tests.resources
 from blockchainetl_common.streaming.streamer import Streamer
-from eosetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
+from eosetl.jobs.exporters.blocks_item_exporter import blocks_item_exporter
 from eosetl.streaming.eos_streamer_adapter import EosStreamerAdapter
 from blockchainetl_common.thread_local_proxy import ThreadLocalProxy
 from tests.eosetl.job.helpers import get_eos_rpc
@@ -60,7 +60,7 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
                 provider_type,
                 read_resource_lambda=lambda file: read_resource(resource_group, file))),
         batch_size=batch_size,
-        item_exporter=blocks_and_transactions_item_exporter(
+        item_exporter=blocks_item_exporter(
             blocks_output_file, transactions_output_file, actions_output_file),
     )
     streamer = Streamer(
