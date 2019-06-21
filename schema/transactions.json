@@ -1,0 +1,88 @@
+[
+  {
+    "name": "block_hash",
+    "type": "STRING",
+    "description": "Block hash"
+  },
+  {
+    "name": "status",
+    "type": "STRING",
+    "description": "Transaction status"
+  },
+  {
+    "name": "cpu_usage_us",
+    "type": "INT64",
+    "description": "CPU usage in microsecond"
+  },
+  {
+    "name": "net_usage_words",
+    "type": "INT64",
+    "description": "NET usage in words"
+  },
+  {
+    "name": "hash",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Transaction hash"
+  },
+  {
+    "name": "signatures",
+    "type": "STRING",
+    "description": "Transaction signatures"
+  },
+  {
+    "name": "compression",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "packed_context_free_data",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "context_free_data",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "packed_trx",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "expiration",
+    "type": "TIMESTAMP",
+    "description": ""
+  },
+  {
+    "name": "ref_block_num",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "ref_block_prefix",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "max_net_usage_words",
+    "type": "INT64",
+    "description": "Max number of words for network usage"
+  },
+  {
+    "name": "max_cpu_usage_ms",
+    "type": "INT64",
+    "description": "Max number of microseconds for CPU"
+  },
+  {
+    "name": "delay_sec",
+    "type": "INT64",
+    "description": "Execute transaction delay_sec seconds after including in a block"
+  },
+  {
+    "name": "transaction_extensions",
+    "type": "STRING",
+    "description": ""
+  }
+]

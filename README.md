@@ -34,61 +34,16 @@ For the latest version, check out the repo and call
 ## Table of Contents
 
 - [Schema](#schema)
-  - [blocks.json](#blocksjson)
-  - [transactions.json](#transactionsjson)
-  - [actions.json](#actionsjson)
 - [Exporting the Blockchain](#exporting-the-blockchain)
   - [Running in Docker](#running-in-docker)
   - [Command Reference](#command-reference)
 - [Public Datasets in BigQuery](#public-datasets-in-bigquery)
 
-
 ## Schema
 
-### blocks.json
-
-Field               | Type            |
---------------------|-----------------|
-hash                | hex_string      | 
-size                | bigint          |
-stripped_size       | bigint          |
-weight              | bigint          |
-number              | bigint          |
-version             | bigint          |
-merkle_root         | hex_string      |
-timestamp           | bigint          |
-nonce               | hex_string      |
-bits                | hex_string      |
-coinbase_param      | hex_string      |
-transaction_count   | bigint          |
-
-### transactions.json
-
-Field                   | Type                  |
-------------------------|-----------------------|
-hash                    | hex_string            | 
-size                    | bigint                |
-virtual_size            | bigint                |
-version                 | bigint                |
-lock_time               | bigint                |
-block_number            | bigint                |
-block_hash              | hex_string            |
-block_timestamp         | bigint                |
-is_coinbase             | boolean               |
-inputs                  | []transaction_input   |
-outputs                 | []transaction_output  |
-input_count             | bigint                |
-output_count            | bigint                |
-input_value             | bigint                |
-output_value            | bigint                |
-fee                     | bigint                |
-
-### actions.json
-
-TODO
-
-
-You can find column descriptions in [schemas](https://github.com/blockchain-etl/eos-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
+- [blocks](./schema/blocks.json)
+- [transactions](./schema/transactions.json)
+- [actions](./schema/actions.json)
 
 ## Exporting the Blockchain
 

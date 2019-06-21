@@ -1,0 +1,37 @@
+[
+  {
+    "name": "transaction_hash",
+    "type": "STRING",
+    "description": "Transaction hash"
+  },
+  {
+    "name": "block_hash",
+    "type": "STRING",
+    "description": "Block hash"
+  },
+  {
+    "name": "account",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "name",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "authorization",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "data",
+    "type": "STRING",
+    "description": ""
+  },
+  {
+    "name": "hex_data",
+    "type": "STRING",
+    "description": ""
+  }
+]
