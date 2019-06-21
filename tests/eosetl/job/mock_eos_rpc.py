@@ -61,6 +61,10 @@ class MockEosRpc:
         file_content = self.read_resource(file_name)
         return json_loads(file_content)
 
+    def get_info(self):
+        file_content = self.read_resource('rpc_response_get_info.json')
+        return json_loads(file_content)
+
 
 def json_loads(s):
     return json.loads(s, parse_float=decimal.Decimal)

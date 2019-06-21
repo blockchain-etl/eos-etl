@@ -1,0 +1,58 @@
+{
+    "timestamp": "2018-07-09T15:41:25.000",
+    "producer": "eosswedenorg",
+    "confirmed": 0,
+    "previous": "004c4b411517a33cdf4c3d4172ae3a40d85d032c783b91e28ac9ad3e07e6ffc5",
+    "transaction_mroot": "3efaeeac0fdfaed84ffd16fca85376a42e96de88a063a6bd89fb182195a156ec",
+    "action_mroot": "5513830797f4f1256de493abba1b4e266d08efaf46b9686b1a7370238eceacf6",
+    "schedule_version": 127,
+    "new_producers": null,
+    "header_extensions": [],
+    "producer_signature": "SIG_K1_K53pkYNcBe4SY1Fm59vihxLSgRPefQpV9HJqGBjUcXcb4qJUCdiNi44ukyEhpUqBF9cRjLaiJsWvE54AF8y7cdPp8cXGwW",
+    "transactions": [{
+        "status": "executed",
+        "cpu_usage_us": 5103,
+        "net_usage_words": 16,
+        "trx": {
+            "id": "f5724bd96a7b2522ba5eec1173887a7dae4b8002cf181c2ceecf6a9ce053e3d6",
+            "signatures": [
+                "SIG_K1_KfmF8Jpb2ZVSHzAKYTnJ23BbDbbLQWEgGPF33sbjkEKDRfiC8dZ4uPj1YastaiMS7xQLApix1BU2UGVQ5AF8pvcGcmocFF"
+            ],
+            "compression": "none",
+            "packed_context_free_data": "",
+            "context_free_data": [],
+            "packed_trx": "2c89435b404be8d4592900000000010000000000ea3055000000004873bd3e01705532374b7367af00000000a8ed323220705532374b7367af705532374b7367afd05200000000000004454f530000000000",
+            "transaction": {
+                "expiration": "2018-07-09T16:11:24",
+                "ref_block_num": 19264,
+                "ref_block_prefix": 693753064,
+                "max_net_usage_words": 0,
+                "max_cpu_usage_ms": 0,
+                "delay_sec": 0,
+                "context_free_actions": [],
+                "actions": [{
+                    "account": "eosio",
+                    "name": "buyram",
+                    "authorization": [{
+                        "actor": "pxnramtrader",
+                        "permission": "active"
+                    }
+                    ],
+                    "data": {
+                        "payer": "pxnramtrader",
+                        "receiver": "pxnramtrader",
+                        "quant": "2.1200 EOS"
+                    },
+                    "hex_data": "705532374b7367af705532374b7367afd05200000000000004454f5300000000"
+                }
+                ],
+                "transaction_extensions": []
+            }
+        }
+    }
+    ],
+    "block_extensions": [],
+    "id": "004c4b42ba0d7645f247b981832a39ecf57c722a01f1164e2437d7e2a71194e1",
+    "block_num": 5000002,
+    "ref_block_prefix": 2176403442
+}

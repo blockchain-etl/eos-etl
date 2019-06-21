@@ -39,8 +39,8 @@ def read_resource(resource_group, file_name):
 
 @pytest.mark.timeout(10)
 @pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type,chain", [
-    (50001, 50002, 1, 'bitcoin/stream_50001_50002', 'mock', 'bitcoin'),
-    skip_if_slow_tests_disabled([50001, 50002, 1, 'bitcoin/stream_50001_50002', 'online', 'bitcoin']),
+    (5000001, 5000002, 1, 'eos/stream_50001_50002', 'mock', 'eos'),
+    skip_if_slow_tests_disabled([5000001, 5000002, 1, 'eos/stream_50001_50002', 'online', 'eos']),
 ])
 def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, provider_type, chain):
     try:
@@ -50,6 +50,7 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
 
     blocks_output_file = str(tmpdir.join('actual_block.json'))
     transactions_output_file = str(tmpdir.join("actual_transactions.json"))
+    actions_output_file = str(tmpdir.join("actual_actions.json"))
 
     stream(
         eos_rpc=ThreadLocalProxy(
@@ -60,7 +61,7 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
         start_block=start_block,
         end_block=end_block,
         batch_size=batch_size,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file)
+        item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file, actions_output_file)
     )
 
     print('=====================')

@@ -71,7 +71,7 @@ def stream(
         init_last_synced_block_file((start_block or 0) - 1, last_synced_block_file)
 
     last_synced_block = read_last_synced_block(last_synced_block_file)
-    btc_service = EosService(eos_rpc, chain)
+    eos_service = EosService(eos_rpc)
 
     item_exporter.open()
 
@@ -79,7 +79,7 @@ def stream(
         blocks_to_sync = 0
 
         try:
-            current_block = int(btc_service.get_latest_block().number)
+            current_block = int(eos_service.get_latest_block()["block_num"])
             target_block = current_block - lag
             target_block = min(target_block, last_synced_block + block_batch_size)
             target_block = min(target_block, end_block) if end_block is not None else target_block

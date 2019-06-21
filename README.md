@@ -287,12 +287,7 @@ handle chain reorganizations - they are less likely the further a block from the
 ```bash
 > pip install -e .[dev]
 > echo "The below variables are optional"
-> export eosetl_BITCOIN_PROVIDER_URI=http://user:pass@localhost:8332
-> export eosetl_LITECOIN_PROVIDER_URI=http://user:pass@localhost:8331
-> export eosetl_DOGECOIN_PROVIDER_URI=http://user:pass@localhost:8330
-> export eosetl_BITCOIN_CASH_PROVIDER_URI=http://user:pass@localhost:8329
-> export eosetl_DASH_PROVIDER_URI=http://user:pass@localhost:8328
-> export eosetl_ZCASH_PROVIDER_URI=http://user:pass@localhost:8327
+> export eosetl_EOS_PROVIDER_URI=http://api.main.alohaeos.com:80
 > pytest -vv
 ```
 
