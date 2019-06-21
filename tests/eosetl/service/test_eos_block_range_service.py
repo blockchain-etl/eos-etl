@@ -23,7 +23,7 @@
 import pytest
 from dateutil.parser import parse
 
-from eosetl.service.btc_block_range_service import BtcBlockRangeService
+from eosetl.service.eos_block_range_service import EosBlockRangeService
 from blockchainetl.service.graph_operations import OutOfBoundsError
 from tests.eosetl.job.helpers import get_eos_rpc
 from tests.helpers import skip_if_slow_tests_disabled
@@ -48,7 +48,7 @@ from tests.helpers import skip_if_slow_tests_disabled
     skip_if_slow_tests_disabled(['zcash', '2016-10-28', 0, 629], chain='zcash'),
 ])
 def test_get_block_range_for_date(chain, date, expected_start_block, expected_end_block):
-    btc_block_range_service = get_new_btc_block_range_service(chain)
+    btc_block_range_service = get_new_eos_block_range_service(chain)
     parsed_date = parse(date)
     blocks = btc_block_range_service.get_block_range_for_date(parsed_date)
     assert blocks == (expected_start_block, expected_end_block)
@@ -58,7 +58,7 @@ def test_get_block_range_for_date(chain, date, expected_start_block, expected_en
     skip_if_slow_tests_disabled(['bitcoin','2030-01-01'], chain='bitcoin')
 ])
 def test_get_block_range_for_date_fail(chain, date):
-    btc_service = get_new_btc_block_range_service(chain)
+    btc_service = get_new_eos_block_range_service(chain)
     parsed_date = parse(date)
     with pytest.raises(OutOfBoundsError):
         btc_service.get_block_range_for_date(parsed_date)
@@ -69,11 +69,11 @@ def test_get_block_range_for_date_fail(chain, date):
     skip_if_slow_tests_disabled(['bitcoin', 1328227200, 1328248800, 165081,165132], chain='bitcoin'),
 ])
 def test_get_block_range_for_timestamps(chain, start_timestamp, end_timestamp, expected_start_block, expected_end_block):
-    eth_service = get_new_btc_block_range_service(chain)
+    eth_service = get_new_eos_block_range_service(chain)
     blocks = eth_service.get_block_range_for_timestamps(start_timestamp, end_timestamp)
     assert blocks == (expected_start_block, expected_end_block)
 
 
-def get_new_btc_block_range_service(chain):
+def get_new_eos_block_range_service(chain):
     rpc = get_eos_rpc("online", chain=chain)
-    return BtcBlockRangeService(rpc)
+    return EosBlockRangeService(rpc)

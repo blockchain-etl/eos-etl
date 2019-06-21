@@ -26,9 +26,8 @@ import os
 import time
 
 from eosetl.enumeration.chain import Chain
-from eosetl.jobs.enrich_transactions import EnrichTransactionsJob
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
-from eosetl.service.btc_service import EosService
+from eosetl.service.eos_service import EosService
 from blockchainetl.file_utils import smart_open
 from blockchainetl.jobs.exporters.console_item_exporter import ConsoleItemExporter
 from blockchainetl.jobs.exporters.in_memory_item_exporter import InMemoryItemExporter

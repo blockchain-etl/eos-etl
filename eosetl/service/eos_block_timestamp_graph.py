@@ -20,26 +20,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from eosetl.btc_utils import bitcoin_to_satoshi
-from eosetl.domain.join_split import BtcJoinSplit
+
+from eosetl.service.eos_service import EosService
+from blockchainetl.service.graph_operations import Point
+import json
+import dateutil.parser
+
+class BlockTimestampGraph(object):
+    def __init__(self, eos_rpc):
+        self._eos_service = EosService(eos_rpc)
+
+    def get_first_point(self):
+        block = self._eos_service.get_genesis_block()
+        return block_to_point(block)
+
+    def get_last_point(self):
+        block = self._eos_service.get_latest_block()
+        return block_to_point(block)
+
+    def get_point(self, block_number):
+        block = self._eos_service.get_block(block_number)
+        return block_to_point(block)
+
+    def get_points(self, block_numbers):
+        blocks = self._eos_service.get_blocks(block_numbers)
+        return [block_to_point(block) for block in blocks]
 
 
-class BtcJoinSplitMapper(object):
-    def vjoinsplit_to_join_splits(self, vjoinsplit):
-        join_splits = []
-        index = 0
-        for item in (vjoinsplit or []):
-            join_split = self.json_dict_to_join_split(item)
-            join_split.index = index
-            index = index + 1
-            join_splits.append(join_split)
-
-        return join_splits
-
-    def json_dict_to_join_split(self, json_dict):
-        join_split = BtcJoinSplit()
-
-        join_split.public_input_value = bitcoin_to_satoshi(json_dict.get('vpub_new'))
-        join_split.public_output_value = bitcoin_to_satoshi(json_dict.get('vpub_old'))
-
-        return join_split
+def block_to_point(block):
+    block_timestamp_utc = dateutil.parser.parse(block["timestamp"] + "Z").timestamp()
+    return Point(block["block_num"],block_timestamp_utc)

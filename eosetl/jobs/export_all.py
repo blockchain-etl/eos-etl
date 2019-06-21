@@ -68,12 +68,22 @@ def export_all(chain, partitions, output_dir, provider_uri, max_workers, batch_s
         )
         os.makedirs(os.path.dirname(transactions_output_dir), exist_ok=True)
 
+        actions_output_dir = '{output_dir}/actions{partition_dir}'.format(
+            output_dir=output_dir,
+            partition_dir=partition_dir,
+        )
+        os.makedirs(os.path.dirname(actions_output_dir), exist_ok=True)
+
         blocks_file = '{blocks_output_dir}/blocks_{file_name_suffix}.json'.format(
             blocks_output_dir=blocks_output_dir,
             file_name_suffix=file_name_suffix,
         )
         transactions_file = '{transactions_output_dir}/transactions_{file_name_suffix}.json'.format(
             transactions_output_dir=transactions_output_dir,
+            file_name_suffix=file_name_suffix,
+        )
+        actions_file = '{actions_output_dir}/actions_{file_name_suffix}.json'.format(
+            actions_output_dir=actions_output_dir,
             file_name_suffix=file_name_suffix,
         )
         logger.info('Exporting blocks {block_range} to {blocks_file}'.format(
@@ -92,7 +102,7 @@ def export_all(chain, partitions, output_dir, provider_uri, max_workers, batch_s
             batch_size=batch_size,
             eos_rpc=ThreadLocalProxy(lambda: EosRpc(provider_uri)),
             max_workers=max_workers,
-            item_exporter=blocks_and_transactions_item_exporter(blocks_file, transactions_file),
+            item_exporter=blocks_and_transactions_item_exporter(blocks_file, transactions_file, actions_file),
             export_blocks=blocks_file is not None,
             export_transactions=transactions_file is not None)
         job.run()

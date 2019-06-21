@@ -23,11 +23,11 @@
 
 from datetime import datetime, timezone
 
-from eosetl.service.btc_block_timestamp_graph import BlockTimestampGraph
+from eosetl.service.eos_block_timestamp_graph import BlockTimestampGraph
 from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsError
 
 
-class BtcBlockRangeService(object):
+class EosBlockRangeService(object):
     def __init__(self, eos_rpc):
         graph = BlockTimestampGraph(eos_rpc)
         self._graph_operations = GraphOperations(graph)

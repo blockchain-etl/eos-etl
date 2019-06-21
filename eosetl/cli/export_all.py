@@ -27,7 +27,7 @@ import re
 from datetime import datetime, timedelta
 from eosetl.enumeration.chain import Chain
 from eosetl.jobs.export_all import export_all as do_export_all
-from eosetl.service.btc_block_range_service import BtcBlockRangeService
+from eosetl.service.eos_block_range_service import EosBlockRangeService
 from eosetl.rpc.eos_rpc import EosRpc
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
@@ -52,7 +52,7 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 
         day = timedelta(days=1)
 
-        btc_service = BtcBlockRangeService(
+        btc_service = EosBlockRangeService(
             eos_rpc=ThreadLocalProxy(lambda: EosRpc(provider_uri))
         )
 

@@ -26,7 +26,7 @@ from datetime import datetime
 import click
 from eosetl.rpc.eos_rpc import EosRpc
 
-from eosetl.service.btc_block_range_service import BtcBlockRangeService
+from eosetl.service.eos_block_range_service import EosBlockRangeService
 from blockchainetl.file_utils import smart_open
 from blockchainetl.logging_utils import logging_basic_config
 
@@ -43,7 +43,7 @@ def get_block_range_for_date(provider_uri, date, output):
     """Outputs start and end blocks for given date."""
 
     eos_rpc = EosRpc(provider_uri)
-    btc_service = BtcBlockRangeService(eos_rpc)
+    btc_service = EosBlockRangeService(eos_rpc)
 
     start_block, end_block = btc_service.get_block_range_for_date(date)
 

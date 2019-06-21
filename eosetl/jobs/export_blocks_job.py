@@ -22,7 +22,7 @@
 from eosetl.mappers.action_mapper import EosActionMapper
 from eosetl.mappers.block_mapper import EosBlockMapper
 from eosetl.mappers.transaction_mapper import EosTransactionMapper
-from eosetl.service.btc_service import EosService
+from eosetl.service.eos_service import EosService
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.utils import validate_range
@@ -53,7 +53,7 @@ class ExportBlocksJob(BaseJob):
         if not self.export_blocks and not self.export_transactions:
             raise ValueError('At least one of export_blocks or export_transactions must be True')
 
-        self.eos_service = EosService(eos_rpc, chain)
+        self.eos_service = EosService(eos_rpc)
         self.block_mapper = EosBlockMapper()
         self.transaction_mapper = EosTransactionMapper()
         self.action_mapper = EosActionMapper()

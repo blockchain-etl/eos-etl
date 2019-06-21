@@ -49,10 +49,8 @@ logging_basic_config()
 @click.option('--actions-output', default=None, type=str,
               help='The output file for actions. '
                    'If not provided transactions will not be exported. Use "-" for stdout')
-@click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
-              help='The type of chain')
 def export_blocks_and_transactions(start_block, end_block, provider_uri,
-                                   max_workers, blocks_output, transactions_output, actions_output, chain):
+                                   max_workers, blocks_output, transactions_output, actions_output):
     """Export blocks and transactions."""
     batch_size = 1
 
@@ -66,7 +64,6 @@ def export_blocks_and_transactions(start_block, end_block, provider_uri,
         eos_rpc=ThreadLocalProxy(lambda: EosRpc(provider_uri)),
         max_workers=max_workers,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output, transactions_output, actions_output),
-        chain=chain,
         export_blocks=blocks_output is not None,
         export_transactions=transactions_output is not None)
     job.run()
