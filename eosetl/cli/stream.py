@@ -35,17 +35,17 @@ logging_basic_config()
 @click.option('-l', '--last-synced-block-file', default='last_synced_block.txt', type=str, help='')
 @click.option('--lag', default=0, type=int, help='The number of blocks to lag behind the network.')
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
-              help='The URI of the remote Bitcoin node')
+              help='The URI of the remote EOS node')
 @click.option('-o', '--output', type=str,
-              help='Google PubSub topic path e.g. projects/your-project/topics/bitcoin_blockchain. '
+              help='Google PubSub topic path e.g. projects/your-project/topics/eos_blockchain. '
                    'If not specified will print to console')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block')
-@click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain')
+@click.option('-c', '--chain', default=Chain.EOS, type=click.Choice(Chain.ALL), help='The type of chain')
 @click.option('-s', '--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs')
 @click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request')
 @click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
-def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
+def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.EOS,
            period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5):
     """Streams all data types to console or Google Pub/Sub."""
     from eosetl.streaming.streaming_utils import get_item_exporter

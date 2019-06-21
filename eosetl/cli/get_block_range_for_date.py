@@ -35,7 +35,7 @@ logging_basic_config()
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
-              help='The URI of the remote Bitcoin node')
+              help='The URI of the remote EOS node')
 @click.option('-d', '--date', required=True, type=lambda d: datetime.strptime(d, '%Y-%m-%d'),
               help='The date e.g. 2018-01-01.')
 @click.option('-o', '--output', default='-', type=str, help='The output file. If not specified stdout is used.')

@@ -62,7 +62,7 @@ def stream(
         item_exporter=ConsoleItemExporter(),
         start_block=None,
         end_block=None,
-        chain=Chain.BITCOIN,
+        chain=Chain.EOS,
         period_seconds=10,
         batch_size=2,
         block_batch_size=10,
@@ -111,24 +111,8 @@ def stream(
             blocks = blocks_and_transactions_item_exporter.get_items('block')
             transactions = blocks_and_transactions_item_exporter.get_items('transaction')
 
-            # Enrich transactions
-            enriched_transactions_item_exporter = InMemoryItemExporter(item_types=['transaction'])
-
-            enrich_transactions_job = EnrichTransactionsJob(
-                transactions_iterable=transactions,
-                batch_size=batch_size,
-                eos_rpc=eos_rpc,
-                max_workers=max_workers,
-                item_exporter=enriched_transactions_item_exporter,
-                chain=chain
-            )
-            enrich_transactions_job.run()
-            enriched_transactions = enriched_transactions_item_exporter.get_items('transaction')
-            if len(enriched_transactions) != len(transactions):
-                raise ValueError('The number of transactions is wrong ' + str(transactions))
-
             logging.info('Exporting with ' + type(item_exporter).__name__)
-            item_exporter.export_items(blocks + enriched_transactions)
+            item_exporter.export_items(blocks + transactions)
 
             logging.info('Writing last synced block {}'.format(target_block))
             write_last_synced_block(last_synced_block_file, target_block)

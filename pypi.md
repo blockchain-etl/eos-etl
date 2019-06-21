@@ -24,7 +24,7 @@ Run the following to install to test pypi:
 ```bash
 > python setup.py sdist
 > twine upload dist/* -r testpypi
-> pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple bitcoin-etl 
+> pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple eos-etl 
 ```
 
 Run the following to install to pypi:
@@ -32,5 +32,5 @@ Run the following to install to pypi:
 ```bash
 > python setup.py sdist
 > twine upload dist/* 
-> pip install bitcoin-etl 
+> pip install eos-etl 
 ```

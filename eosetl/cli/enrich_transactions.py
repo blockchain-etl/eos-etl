@@ -37,13 +37,13 @@ logging_basic_config()
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-b', '--batch-size', default=10, type=int, help='The number of transactions to enrich at a time.')
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
-              help='The URI of the remote Bitcoin node')
+              help='The URI of the remote EOS node')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
 @click.option('--transactions-input', default=None, type=str,
               help='The JSON newline-delimited input file with transactions.')
 @click.option('--transactions-output', default=None, type=str,
               help='The JSON newline-delimited output file with transactions.')
-@click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain')
+@click.option('-c', '--chain', default=Chain.EOS, type=click.Choice(Chain.ALL), help='The type of chain')
 def enrich_transactions(batch_size, provider_uri, max_workers, transactions_input, transactions_output, chain):
     """Enrich transactions."""
 

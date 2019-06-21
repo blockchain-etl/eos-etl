@@ -58,6 +58,6 @@ def run_slow_tests(chain):
     return provider_uri_variable is not None and len(provider_uri_variable) > 0
 
 
-def skip_if_slow_tests_disabled(data, chain='bitcoin'):
+def skip_if_slow_tests_disabled(data, chain='eos'):
     return pytest.param(*data, marks=pytest.mark.skipif(not run_slow_tests(chain),
                                                         reason='Skipping slow running tests'))

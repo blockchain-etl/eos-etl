@@ -89,11 +89,11 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 @click.option('-b', '--partition-batch-size', default=100, type=int,
               help='The number of blocks to export in partition.')
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
-              help='The URI of the remote Bitcoin node')
+              help='The URI of the remote EOS node')
 @click.option('-o', '--output-dir', default='output', type=str, help='Output directory, partitioned in Hive style.')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
 @click.option('-B', '--export-batch-size', default=1, type=int, help='The number of requests in JSON RPC batches.')
-@click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
+@click.option('-c', '--chain', default=Chain.EOS, type=click.Choice(Chain.ALL),
               help='The type of chain')
 def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain):
     """Exports all data for a range of blocks."""

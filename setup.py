@@ -10,14 +10,14 @@ def read(fname):
 long_description = read('README.md') if os.path.isfile("README.md") else ""
 
 setup(
-    name='bitcoin-etl',
+    name='eos-etl',
     version='1.2.0',
     author='Evgeny Medvedev',
     author_email='evge.medvedev@gmail.com',
-    description='Tools for exporting Bitcoin blockchain data to JSON',
+    description='Tools for exporting EOS blockchain data to JSON',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/blockchain-etl/bitcoin-etl',
+    url='https://github.com/blockchain-etl/eos-etl',
     packages=find_packages(exclude=['tests']),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -28,7 +28,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
     ],
-    keywords='bitcoin',
+    keywords='EOS',
     python_requires='>=3.5.0,<3.8.0',
     install_requires=[
         'requests==2.20.0',
@@ -50,8 +50,8 @@ setup(
         ],
     },
     project_urls={
-        'Bug Reports': 'https://github.com/blockchain-etl/bitcoin-etl/issues',
+        'Bug Reports': 'https://github.com/blockchain-etl/eos-etl/issues',
         'Chat': 'https://gitter.im/ethereum-etl/Lobby',
-        'Source': 'https://github.com/blockchain-etl/bitcoin-etl',
+        'Source': 'https://github.com/blockchain-etl/eos-etl',
     },
 )

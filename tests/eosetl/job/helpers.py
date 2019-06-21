@@ -26,7 +26,7 @@ from eosetl.rpc.eos_rpc import EosRpc
 from tests.eosetl.job.mock_eos_rpc import MockEosRpc
 
 
-def get_eos_rpc(provider_type, read_resource_lambda=None, chain='bitcoin'):
+def get_eos_rpc(provider_type, read_resource_lambda=None, chain='eos'):
     if provider_type == "mock":
         if read_resource_lambda is None:
             raise ValueError('read_resource_lambda must not be None for provider type {}'.format(provider_type))
