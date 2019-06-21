@@ -20,41 +20,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import json
 
 class EosActionMapper(object):
 
     def action_to_dict(self, action, transaction_dict, block=None):
-        try:
-            # remember to update
-            # blocks_and_transactions_item_exporter.py as well
+        # remember to update
+        # blocks_and_transactions_item_exporter.py as well
 
-            result = {
-                'type': 'action',
-                'transaction_hash': transaction_dict['trx.hash'],
-                'block_hash': transaction_dict['block_hash'],
-                'account': action["account"],
-                'name': action["name"],
-                'authorization': action["authorization"],
-                'data': action["data"],
-                'hex_data': action["hex_data"] if "hex_data" in action else "NULL",
-            }
+        result = {
+            'type': 'action',
+            'transaction_hash': transaction_dict['trx.hash'],
+            'block_hash': transaction_dict['block_hash'],
+            'account': action['account'],
+            'name': action['name'],
+            'authorization': action['authorization'],
+            'data': action['data'],
+            'hex_data': action['hex_data'] if 'hex_data' in action else 'NULL',
+        }
 
-            action.pop('account', None)
-            action.pop('name', None)
-            action.pop('authorization', None)
-            action.pop('data', None)
-            action.pop('hex_data', None)
-            # unset all this fields and check what's left
-            if action != {}:
-                print(f"raw action: {action}")
+        action.pop('account', None)
+        action.pop('name', None)
+        action.pop('authorization', None)
+        action.pop('data', None)
+        action.pop('hex_data', None)
+        # unset all this fields and check what's left
+        if action != {}:
+            print('raw action: {}'.format(action))
 
-            return result
-        except Exception as e:
-            block_id = block['id'] if block is not None else "unknown"
-            print(f"""
-Skipping action{json.dumps(action)}
-from block id: {block_id}
-because: {e}""")
-            raise e
-            return None
+        return result
