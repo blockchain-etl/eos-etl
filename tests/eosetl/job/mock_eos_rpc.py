@@ -35,9 +35,6 @@ class MockEosRpc:
                 blockhash = req[1]
                 verbosity = req[2] if len(req) > 2 else None
                 file_name = 'rpc_response_{}_{}_{}.json'.format(method, blockhash, verbosity)
-            elif method == 'getblockhash':
-                number = req[1]
-                file_name = 'rpc_response_{}_{}.json'.format(method, number)
             elif method == 'getrawtransaction':
                 hash = req[1]
                 file_name = 'rpc_response_{}_{}.json'.format(method, hash)
@@ -55,11 +52,6 @@ class MockEosRpc:
     def getblockcount(self):
         file_content = self.read_resource('rpc_response_getblockcount.json')
         return file_content
-
-    def getblockhash(self, block_number):
-        file_name = 'rpc_response_{}_{}.json'.format("getblockhash", block_number)
-        file_content = self.read_resource(file_name)
-        return json_loads(file_content)
 
     def get_info(self):
         file_content = self.read_resource('rpc_response_get_info.json')

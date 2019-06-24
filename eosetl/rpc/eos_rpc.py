@@ -41,19 +41,13 @@ class EosRpc:
             url=self.provider_uri + endpoint,
             data=json.dumps(data),
             headers=self.headers,
-            timeout=60
+            timeout=self.timeout
         )
 
-        # raise Exception(raw_response.content)
-
-        if (raw_response.status_code != 200):
+        if raw_response.status_code != 200:
             raise Exception("Failed calling API. Error: " + raw_response.text)
 
         return raw_response.json(parse_float=decimal.Decimal)
-
-    def getblockhash(self, param):
-        response = self.batch([['getblockhash', param]])
-        return response[0] if len(response) > 0 else None
 
     def getblock(self, block_num_or_id):
         return self.call('/v1/chain/get_block', {
@@ -62,8 +56,3 @@ class EosRpc:
 
     def get_info(self):
         return self.call('/v1/chain/get_info', {})
-
-    def getblockcount(self):
-        response = self.batch([['getblockcount']])
-        return response[0] if len(response) > 0 else None
-
