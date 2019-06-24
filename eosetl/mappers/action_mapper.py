@@ -24,27 +24,17 @@
 class EosActionMapper(object):
 
     def action_to_dict(self, action, transaction_dict):
-        # remember to update
-        # blocks_item_exporter.py as well
-
         result = {
             'type': 'action',
-            'transaction_hash': transaction_dict['trx.hash'],
-            'block_hash': transaction_dict['block_hash'],
-            'account': action['account'],
-            'name': action['name'],
-            'authorization': action['authorization'],
-            'data': action['data'],
-            'hex_data': action['hex_data'] if 'hex_data' in action else 'NULL',
+            'account': action.get('account'),
+            'name': action.get('name'),
+            'authorization': action.get('authorization'),
+            'data': action.get('data'),
+            'hex_data': action.get('hex_data'),
+            'transaction_hash': transaction_dict.get('hash'),
+            'block_hash': transaction_dict.get('block_hash'),
+            'block_number': transaction_dict.get('block_number'),
+            'block_timestamp': transaction_dict.get('block_timestamp'),
         }
-
-        action.pop('account', None)
-        action.pop('name', None)
-        action.pop('authorization', None)
-        action.pop('data', None)
-        action.pop('hex_data', None)
-        # unset all this fields and check what's left
-        if action != {}:
-            print('raw action: {}'.format(action))
 
         return result

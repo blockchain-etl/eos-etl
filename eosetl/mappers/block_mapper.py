@@ -21,41 +21,26 @@
 # SOFTWARE.
 
 
-from eosetl.mappers.transaction_mapper import EosTransactionMapper
-
-
 class EosBlockMapper(object):
-    def __init__(self, transaction_mapper=None):
-        if transaction_mapper is None:
-            self.transaction_mapper = EosTransactionMapper()
-        else:
-            self.transaction_mapper = transaction_mapper
 
     def block_to_dict(self, block):
+        if block.get('transactions') is not None:
+            transaction_count = len(block.get('transactions'))
+        else:
+            transaction_count = 0
+
         return {
             'type': 'block',
-            'hash': block["id"],
-            'block_num': block["block_num"],
-            'ref_block_prefix': block["ref_block_prefix"],
-            'previous': block["previous"],
-            'action_mroot': block["action_mroot"],
-            'transaction_mroot': block["transaction_mroot"],
-            'new_producers': block["new_producers"],
-            'header_extensions': block["header_extensions"],
-            'block_extensions': block["block_extensions"],
-            'timestamp': block["timestamp"],
-            'producer': block["producer"],
-            'transaction_count': len(block["transactions"])
+            'hash': block.get('id'),
+            'number': block.get('block_num'),
+            'ref_block_prefix': block.get('ref_block_prefix'),
+            'previous': block.get('previous'),
+            'action_mroot': block.get('action_mroot'),
+            'transaction_mroot': block.get('transaction_mroot'),
+            'new_producers': block.get('new_producers'),
+            'header_extensions': block.get('header_extensions'),
+            'block_extensions': block.get('block_extensions'),
+            'timestamp': block.get('timestamp'),
+            'producer': block.get('producer'),
+            'transaction_count': transaction_count
         }
-
-
-def to_hex(val):
-    if val is None:
-        return None
-
-    if isinstance(val, str):
-        return val
-    elif isinstance(val, int):
-        return format(val, 'x')
-    else:
-        return val

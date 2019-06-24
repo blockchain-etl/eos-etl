@@ -82,18 +82,19 @@ class ExportBlocksJob(BaseJob):
 
     def _export_transactions(self, block):
         if self.export_transactions:
-            for transaction in block["transactions"]:
+            for transaction in block['transactions']:
                 self._export_transaction(transaction, block)
 
     def _export_transaction(self, transaction, block):
         transaction_dict = self.transaction_mapper.transaction_to_dict(transaction, block)
-        if not transaction_dict:  # skip if None returned
-            return
 
         self.item_exporter.export_item(transaction_dict)
 
-        if self.export_actions and transaction_dict.get("trx.transaction.actions") is not None:
-            for action in transaction_dict["trx.transaction.actions"]:
+        if self.export_actions \
+                and isinstance(transaction.get('trx'), dict) \
+                and transaction.get('trx').get('transaction') is not None \
+                and transaction.get('trx').get('transaction').get('actions') is not None:
+            for action in transaction.get('trx').get('transaction').get('actions'):
                 action_dict = self.action_mapper.action_to_dict(action, transaction_dict)
                 self.item_exporter.export_item(action_dict)
 

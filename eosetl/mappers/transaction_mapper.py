@@ -23,42 +23,36 @@
 
 class EosTransactionMapper(object):
 
-    def transaction_to_dict(self, transaction, block=None):
-        # remember to update
-        # blocks_item_exporter.py as well
-
-        if isinstance(transaction["trx"], str):
-            # this is deferred transaction, it does not include any transaction data.
-            # Example: {
-            #   "status": "executed",
-            #   "cpu_usage_us": 934,
-            #   "net_usage_words": 0,
-            #   "trx": "c962ca108b24828aca08abb4a62a1ce9392c565c6bc81aaada7ceb2cbdfafd8b"
-            # }
-            # todo: decide - what should we do about it?..
-            # for now it's just ignored
-            return None
-
-        block_hash = block.get('id') if block is not None else ''
-
-        return {
+    def transaction_to_dict(self, transaction, block):
+        transaction_dict = {
             'type': 'transaction',
-            'block_hash': block_hash,
-            'status': transaction["status"],
-            'cpu_usage_us': transaction["cpu_usage_us"],
-            'net_usage_words': transaction["net_usage_words"],
-            'trx.hash': transaction["trx"]["id"],
-            'trx.signatures': transaction["trx"]["signatures"],
-            'trx.compression': transaction["trx"]["compression"],
-            'trx.packed_context_free_data': transaction["trx"]["packed_context_free_data"],
-            'trx.context_free_data': transaction["trx"]["context_free_data"],
-            'trx.packed_trx': transaction["trx"]["packed_trx"],
-            'trx.transaction.expiration': transaction["trx"]["transaction"]["expiration"],
-            'trx.transaction.ref_block_num': transaction["trx"]["transaction"]["ref_block_num"],
-            'trx.transaction.ref_block_prefix': transaction["trx"]["transaction"]["ref_block_prefix"],
-            'trx.transaction.max_net_usage_words': transaction["trx"]["transaction"]["max_net_usage_words"],
-            'trx.transaction.max_cpu_usage_ms': transaction["trx"]["transaction"]["max_cpu_usage_ms"],
-            'trx.transaction.delay_sec': transaction["trx"]["transaction"]["delay_sec"],
-            'trx.transaction.transaction_extensions': transaction["trx"]["transaction"]["transaction_extensions"],
-            'trx.transaction.actions': transaction["trx"]["transaction"]["actions"],
+            'block_hash': block.get('id'),
+            'block_number': block.get('block_num'),
+            'block_timestamp': block.get('timestamp'),
+            'status': transaction.get('status'),
+            'cpu_usage_us': transaction.get('cpu_usage_us'),
+            'net_usage_words': transaction.get('net_usage_words'),
         }
+
+        trx = transaction.get('trx')
+
+        if isinstance(trx, dict):
+            transaction_dict['hash'] = trx.get('id')
+            transaction_dict['signatures'] = trx.get('signatures')
+            transaction_dict['packed_context_free_data'] = trx.get('packed_context_free_data')
+            transaction_dict['context_free_data'] = trx.get('context_free_data')
+            transaction_dict['packed_trx'] = trx.get('packed_trx')
+
+            trx_transaction = trx.get('transaction')
+
+            if trx_transaction is not None:
+                transaction_dict['expiration'] = trx_transaction.get('expiration')
+                transaction_dict['max_net_usage_words'] = trx_transaction.get('max_net_usage_words')
+                transaction_dict['max_cpu_usage_ms'] = trx_transaction.get('max_cpu_usage_ms')
+                transaction_dict['delay_sec'] = trx_transaction.get('delay_sec')
+                transaction_dict['transaction_extensions'] = trx_transaction.get('transaction_extensions')
+        elif isinstance(trx, str):
+            transaction_dict['hash'] = trx
+            transaction_dict['deferred'] = True
+
+        return transaction_dict
