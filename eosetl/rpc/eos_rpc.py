@@ -23,7 +23,7 @@
 import decimal
 import json
 
-import requests
+from eosetl.rpc.request import make_post_request
 
 
 class EosRpc:
@@ -31,23 +31,25 @@ class EosRpc:
     def __init__(self, provider_uri, timeout=60):
         self.provider_uri = provider_uri
         self.timeout = timeout
-        self.headers = {
-            'accept': 'application/json',
-            'content-type': 'application/json'
-        }
 
     def call(self, endpoint, data):
-        raw_response = requests.post(
-            url=self.provider_uri + endpoint,
-            data=json.dumps(data),
-            headers=self.headers,
+        text = json.dumps(data)
+        request_data = text.encode('utf-8')
+
+        raw_response = make_post_request(
+            self.provider_uri + endpoint,
+            request_data,
             timeout=self.timeout
         )
 
-        if raw_response.status_code != 200:
-            raise Exception("Failed calling API. Error: " + raw_response.text)
+        response = self._decode_rpc_response(raw_response)
+        return response
 
-        return raw_response.json(parse_float=decimal.Decimal)
+    def _decode_rpc_response(self, response):
+        # Errors are ignored because the EOS node returns invalid response that can't be decoded with utf-8
+        # https://github.com/blockchain-etl/eos-etl/issues/10
+        response_text = response.decode('utf-8', errors='ignore')
+        return json.loads(response_text, parse_float=decimal.Decimal)
 
     def getblock(self, block_num_or_id):
         return self.call('/v1/chain/get_block', {
