@@ -5,18 +5,28 @@
     "description": "Block hash"
   },
   {
+    "name": "block_number",
+    "type": "INTEGER",
+    "description": ""
+  },
+  {
+    "name": "block_timestamp",
+    "type": "TIMESTAMP",
+    "description": "Block timestamp"
+  },
+  {
     "name": "status",
     "type": "STRING",
     "description": "Transaction status"
   },
   {
     "name": "cpu_usage_us",
-    "type": "INT64",
+    "type": "INTEGER",
     "description": "CPU usage in microsecond"
   },
   {
     "name": "net_usage_words",
-    "type": "INT64",
+    "type": "INTEGER",
     "description": "NET usage in words"
   },
   {
@@ -28,6 +38,7 @@
   {
     "name": "signatures",
     "type": "STRING",
+    "mode": "REPEATED",
     "description": "Transaction signatures"
   },
   {
@@ -43,6 +54,7 @@
   {
     "name": "context_free_data",
     "type": "STRING",
+    "mode": "REPEATED",
     "description": ""
   },
   {
@@ -67,22 +79,23 @@
   },
   {
     "name": "max_net_usage_words",
-    "type": "INT64",
+    "type": "INTEGER",
     "description": "Max number of words for network usage"
   },
   {
     "name": "max_cpu_usage_ms",
-    "type": "INT64",
+    "type": "INTEGER",
     "description": "Max number of microseconds for CPU"
   },
   {
     "name": "delay_sec",
-    "type": "INT64",
+    "type": "INTEGER",
     "description": "Execute transaction delay_sec seconds after including in a block"
   },
   {
     "name": "transaction_extensions",
     "type": "STRING",
+    "mode": "REPEATED",
     "description": ""
   }
 ]

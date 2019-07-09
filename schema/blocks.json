@@ -7,20 +7,9 @@
   },
   {
     "name": "number",
-    "type": "INT64",
+    "type": "INTEGER",
     "mode": "REQUIRED",
     "description": "The block number"
-  },
-  {
-    "name": "ref_block_prefix",
-    "type": "STRING",
-    "mode": "REQUIRED",
-    "description": ""
-  },
-  {
-    "name": "previous",
-    "type": "STRING",
-    "description": "Hash of the parent block"
   },
   {
     "name": "action_mroot",
@@ -29,21 +18,6 @@
   },
   {
     "name": "transaction_mroot",
-    "type": "STRING",
-    "description": ""
-  },
-  {
-    "name": "new_producers",
-    "type": "STRING",
-    "description": ""
-  },
-  {
-    "name": "header_extensions",
-    "type": "STRING",
-    "description": ""
-  },
-  {
-    "name": "block_extensions",
     "type": "STRING",
     "description": ""
   },
@@ -59,7 +33,7 @@
   },
   {
     "name": "transaction_count",
-    "type": "INT64",
+    "type": "INTEGER",
     "mode": "REQUIRED",
     "description": "Number of transactions in the block"
   }
