@@ -24,13 +24,23 @@
 class EosActionMapper(object):
 
     def action_to_dict(self, action, transaction_dict):
+        data = None
+        if isinstance(action.get('data'), dict):
+            data = dict_to_kv_list(action.get('data'))
+
+        hex_data = None
+        if isinstance(action.get('hex_data'), str):
+            hex_data = action.get('hex_data')
+        if hex_data is None and isinstance(action.get('data'), str):
+            hex_data = action.get('data')
+
         result = {
             'type': 'action',
             'account': action.get('account'),
             'name': action.get('name'),
             'authorization': action.get('authorization'),
-            'data': action.get('data'),
-            'hex_data': action.get('hex_data'),
+            'data': data,
+            'hex_data': hex_data,
             'transaction_hash': transaction_dict.get('hash'),
             'block_hash': transaction_dict.get('block_hash'),
             'block_number': transaction_dict.get('block_number'),
@@ -38,3 +48,11 @@ class EosActionMapper(object):
         }
 
         return result
+
+
+def dict_to_kv_list(d):
+    result = []
+    for key, value in d.items():
+        if isinstance(key, str) and (value is None or isinstance(value, str)):
+            result.append({'key': key, 'value': value})
+    return result
