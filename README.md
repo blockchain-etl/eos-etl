@@ -41,9 +41,9 @@ For the latest version, check out the repo and call
 
 ## Schema
 
-- [blocks](./schema/blocks.json)
-- [transactions](./schema/transactions.json)
-- [actions](./schema/actions.json)
+- [blocks](https://github.com/blockchain-etl/eos-etl-airflow/tree/master/dags/resources/stages/raw/schemas/blocks.json)
+- [transactions](https://github.com/blockchain-etl/eos-etl-airflow/tree/master/dags/resources/stages/raw/schemas/transactions.json)
+- [actions](https://github.com/blockchain-etl/eos-etl-airflow/tree/master/dags/resources/stages/enrich/raw/actions.json)
 
 ## Exporting the Blockchain
 

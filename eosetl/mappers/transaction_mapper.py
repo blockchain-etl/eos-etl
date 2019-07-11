@@ -37,6 +37,7 @@ class EosTransactionMapper(object):
         trx = transaction.get('trx')
 
         if isinstance(trx, dict):
+            transaction_dict['deferred'] = False
             transaction_dict['hash'] = trx.get('id')
             transaction_dict['signatures'] = trx.get('signatures')
             transaction_dict['packed_context_free_data'] = trx.get('packed_context_free_data')
@@ -51,6 +52,11 @@ class EosTransactionMapper(object):
                 transaction_dict['max_cpu_usage_ms'] = trx_transaction.get('max_cpu_usage_ms')
                 transaction_dict['delay_sec'] = trx_transaction.get('delay_sec')
                 transaction_dict['transaction_extensions'] = trx_transaction.get('transaction_extensions')
+
+                actions = trx_transaction.get('actions')
+                if actions is not None and hasattr(actions, '__len__'):
+                    transaction_dict['action_count'] = len(actions)
+
         elif isinstance(trx, str):
             transaction_dict['hash'] = trx
             transaction_dict['deferred'] = True
