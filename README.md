@@ -47,7 +47,7 @@ For the latest version, check out the repo and call
 
 ## Exporting the Blockchain
 
-1. Install python 3.5.0+ https://www.python.org/downloads/
+1. Install python 3.6.0+ https://www.python.org/downloads/
 
 1. Install EOS node or get access to EOS node maintained by someone else (because running your own node is not so easy).
 Some docs:
