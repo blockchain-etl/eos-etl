@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import json
+
 
 class EosActionMapper(object):
 
@@ -53,6 +55,16 @@ class EosActionMapper(object):
 def dict_to_kv_list(d):
     result = []
     for key, value in d.items():
-        if isinstance(key, str) and (value is None or isinstance(value, str)):
-            result.append({'key': key, 'value': value})
+        result.append({'key': to_str(key), 'value': to_str(value)})
+
     return result
+
+
+def to_str(val):
+    if val is None:
+        val_str = None
+    elif isinstance(val, str):
+        val_str = val
+    else:
+        val_str = json.dumps(val)
+    return val_str
