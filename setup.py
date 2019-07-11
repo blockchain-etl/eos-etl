@@ -24,12 +24,11 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
     ],
     keywords='EOS',
-    python_requires='>=3.5.0,<3.8.0',
+    python_requires='>=3.6.0,<3.8.0',
     install_requires=[
         'blockchain-etl-common==1.0.0',
         'requests==2.20.0',
