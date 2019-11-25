@@ -30,14 +30,15 @@ setup(
     keywords='EOS',
     python_requires='>=3.6.0,<3.8.0',
     install_requires=[
-        'blockchain-etl-common==1.0.0',
+        'blockchain-etl-common==1.1.1',
         'requests==2.20.0',
         'python-dateutil==2.7.0',
         'click==7.0'
     ],
     extras_require={
         'streaming': [
-            'google-cloud-pubsub==0.39.1'
+            'timeout-decorator==0.4.1',
+            'google-cloud-pubsub==1.0.2'
         ],
         'dev': [
             'pytest~=4.3.0',

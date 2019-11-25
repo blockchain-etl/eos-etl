@@ -22,6 +22,7 @@
 
 
 import click
+from blockchainetl_common.jobs.exporters.console_item_exporter import ConsoleItemExporter
 from blockchainetl_common.streaming.streaming_utils import configure_logging, configure_signals
 from eosetl.rpc.eos_rpc import EosRpc
 
@@ -40,7 +41,7 @@ logging_basic_config()
               help='Google PubSub topic path e.g. projects/your-project/topics/crypto_eos. '
                    'If not specified will print to console')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block')
-@click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs')
+@click.option('--period-seconds', default=1, type=int, help='How many seconds to sleep between syncs')
 @click.option('-b', '--batch-size', default=1, type=int, help='How many blocks to batch in single request')
 @click.option('-B', '--block-batch-size', default=1, type=int, help='How many blocks to batch in single sync round')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
@@ -52,7 +53,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block,
     configure_logging(log_file)
     configure_signals()
 
-    from blockchainetl_common.streaming.streaming_utils import get_item_exporter
     from eosetl.streaming.eos_streamer_adapter import EosStreamerAdapter
     from blockchainetl_common.streaming.streamer import Streamer
 
@@ -72,3 +72,19 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block,
         pid_file=pid_file,
     )
     streamer.stream()
+
+
+def get_item_exporter(output):
+    if output is not None:
+        from blockchainetl_common.jobs.exporters.google_pubsub_item_exporter import GooglePubSubItemExporter
+        item_exporter = GooglePubSubItemExporter(
+            item_type_to_topic_mapping={
+                'block': output + '.blocks',
+                'transaction': output + '.transactions',
+                'action': output + '.actions'
+            },
+            batch_max_bytes=1024 * 1024, batch_max_latency=3, batch_max_messages=1000)
+    else:
+        item_exporter = ConsoleItemExporter()
+
+    return item_exporter
