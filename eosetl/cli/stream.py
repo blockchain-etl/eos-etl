@@ -19,7 +19,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+import logging
+import random
 
 import click
 from blockchainetl_common.jobs.exporters.console_item_exporter import ConsoleItemExporter
@@ -56,6 +57,10 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block,
     from eosetl.streaming.eos_streamer_adapter import EosStreamerAdapter
     from blockchainetl_common.streaming.streamer import Streamer
 
+    # TODO: Implement fallback mechanism for provider uris instead of picking randomly
+    provider_uri = pick_random_provider_uri(provider_uri)
+    logging.info('Using ' + provider_uri)
+
     streamer_adapter = EosStreamerAdapter(
         eos_rpc=ThreadLocalProxy(lambda: EosRpc(provider_uri)),
         item_exporter=get_item_exporter(output),
@@ -83,8 +88,14 @@ def get_item_exporter(output):
                 'transaction': output + '.transactions',
                 'action': output + '.actions'
             },
+            message_attributes=('item_id',),
             batch_max_bytes=1024 * 1024, batch_max_latency=3, batch_max_messages=1000)
     else:
         item_exporter = ConsoleItemExporter()
 
     return item_exporter
+
+
+def pick_random_provider_uri(provider_uri):
+    provider_uris = [uri.strip() for uri in provider_uri.split(',')]
+    return random.choice(provider_uris)
