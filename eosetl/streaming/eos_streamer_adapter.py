@@ -2,9 +2,11 @@ import logging
 
 from blockchainetl_common.jobs.exporters.console_item_exporter import ConsoleItemExporter
 from blockchainetl_common.jobs.exporters.in_memory_item_exporter import InMemoryItemExporter
+
 from eosetl.jobs.export_blocks_job import ExportBlocksJob
 
 from eosetl.service.eos_service import EosService
+from eosetl.streaming.eos_item_id_calculator import EosItemIdCalculator
 
 
 class EosStreamerAdapter:
@@ -19,6 +21,7 @@ class EosStreamerAdapter:
         self.item_exporter = item_exporter
         self.batch_size = batch_size
         self.max_workers = max_workers
+        self.item_id_calculator = EosItemIdCalculator()
 
     def open(self):
         self.item_exporter.open()
@@ -46,8 +49,16 @@ class EosStreamerAdapter:
         transactions = blocks_item_exporter.get_items('transaction')
         actions = blocks_item_exporter.get_items('action')
 
+        all_items = blocks + transactions + actions
+
+        self.calculate_item_ids(all_items)
+
         logging.info('Exporting with ' + type(self.item_exporter).__name__)
         self.item_exporter.export_items(blocks + transactions + actions)
+
+    def calculate_item_ids(self, items):
+        for item in items:
+            item['item_id'] = self.item_id_calculator.calculate(item)
 
     def close(self):
         self.item_exporter.close()

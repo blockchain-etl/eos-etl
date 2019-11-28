@@ -30,7 +30,7 @@ setup(
     keywords='EOS',
     python_requires='>=3.6.0,<3.8.0',
     install_requires=[
-        'blockchain-etl-common==1.1.1',
+        'blockchain-etl-common==1.2.0',
         'requests==2.20.0',
         'python-dateutil==2.7.0',
         'click==7.0'
