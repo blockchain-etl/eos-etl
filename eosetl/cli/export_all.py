@@ -39,8 +39,8 @@ def is_date_range(start, end):
 
 def is_block_range(start, end):
     """Checks for a valid block number."""
-    return (start.isdigit() and 0 <= int(start) <= 99999999
-            and end.isdigit() and 0 <= int(end) <= 99999999)
+    return (start.isdigit() and 0 <= int(start) <= 999999999
+            and end.isdigit() and 0 <= int(end) <= 999999999)
 
 
 def get_partitions(start, end, partition_batch_size, provider_uri):
